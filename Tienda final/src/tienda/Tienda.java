@@ -18,10 +18,6 @@ public class Tienda {
     public static void main(String[] args) {
         vistas.Login ventana = new vistas.Login();
         ventana.setVisible(true);
-       
-       
-        
-       
         
     }
     
