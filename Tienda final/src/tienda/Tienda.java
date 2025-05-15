@@ -16,7 +16,7 @@ public class Tienda {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        vistas.Login ventana = new vistas.Login();
+        vistas.VistaLogin ventana = new vistas.VistaLogin();
         ventana.setVisible(true);
         
     }

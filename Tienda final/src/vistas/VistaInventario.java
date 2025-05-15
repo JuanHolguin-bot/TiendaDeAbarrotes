@@ -21,19 +21,19 @@ import gestioninventario.ProductoEnlatados;
  *
  * @author jose_
  */
-public class ListaProductos extends javax.swing.JFrame {
+public class VistaInventario extends javax.swing.JFrame {
 
     private DefaultTableModel modeloTabla;
     private String usuario;
-    private RegistrarProducto registrarProductoInstance; // Variable para almacenar la instancia
-    private Ventas ventanaVentasInstance; // Variable para almacenar la instancia
+    private VistaRegistrarProducto registrarProductoInstance; // Variable para almacenar la instancia
+    private VistaVentas ventanaVentasInstance; // Variable para almacenar la instancia
 
-    public ListaProductos() {
+    public VistaInventario() {
         initComponents();
         configurarTabla();
     }
 
-    public ListaProductos(String usuario) {
+    public VistaInventario(String usuario) {
         this.usuario = usuario;
         initComponents();
         configurarTabla();
@@ -236,7 +236,7 @@ public class ListaProductos extends javax.swing.JFrame {
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         if (registrarProductoInstance == null || !registrarProductoInstance.isVisible()) {
-            registrarProductoInstance = new RegistrarProducto(this);
+            registrarProductoInstance = new VistaRegistrarProducto(this);
             registrarProductoInstance.setVisible(true);
         } else {
             registrarProductoInstance.toFront(); // Llevar la ventana al frente si ya está abierta
@@ -245,7 +245,7 @@ public class ListaProductos extends javax.swing.JFrame {
 
     private void btnVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVentaActionPerformed
         if (ventanaVentasInstance == null || !ventanaVentasInstance.isVisible()) {
-            ventanaVentasInstance = new Ventas(usuario, jtProductos);
+            ventanaVentasInstance = new VistaVentas(usuario, jtProductos);
             ventanaVentasInstance.setVisible(true);
         } else {
             ventanaVentasInstance.toFront(); // Llevar la ventana al frente si ya está abierta
