@@ -5,8 +5,6 @@
 package reportes;
 
 import gestioninventario.Venta;
-import gestioninventario.Producto;
-import gestioninventario.Inventario;
 import java.util.List;
 
 
@@ -18,16 +16,5 @@ import java.util.List;
 
         @Override
         public void generarReporte() {
-            imprimirEncabezado();
-            System.out.println("Productos con stock bajo:");
-
-            for (Venta venta : ventas) {
-                for (Producto producto : venta.getProductos().keySet()) {
-                    int stockDisponible = Inventario.obtenerStock(producto.getIdProducto());
-                    if (stockDisponible < 10) {
-                        System.out.println("Producto: " + producto.getNombre() + ", Stock disponible: " + stockDisponible);
-                    }
-                }
-            }
         }
     }

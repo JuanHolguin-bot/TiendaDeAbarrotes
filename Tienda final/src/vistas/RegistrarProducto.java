@@ -7,7 +7,7 @@
  */
 package vistas;
 
-import gestioninventario.Inventario;
+import gestioninventario.Service.Inventario;
 import gestioninventario.Producto;
 import gestioninventario.ProductoAseo;
 import gestioninventario.ProductoBebidas;
@@ -21,9 +21,11 @@ import javax.swing.table.DefaultTableModel;
 public class RegistrarProducto extends javax.swing.JFrame {
 
     private ListaProductos listaProductos;
+    private Inventario inventario;
 
-    public RegistrarProducto(ListaProductos listaProductos) {
+    public RegistrarProducto(ListaProductos listaProductos, Inventario inventario) {
         this.listaProductos = listaProductos;
+        this.inventario = inventario;
         initComponents();
     }
 
@@ -34,7 +36,6 @@ public class RegistrarProducto extends javax.swing.JFrame {
     public void setListaProductos(ListaProductos listaProductos) {
         this.listaProductos = listaProductos;
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -325,12 +326,10 @@ public class RegistrarProducto extends javax.swing.JFrame {
 
         if (producto != null) {
             // Registrar el producto en el inventario
-            Inventario.registrarProducto(producto, cantidad);
-            Inventario.actualizarStock(producto, cantidad);
+            inventario.registrarProducto(producto, cantidad);
 
             // Actualizar la tabla de ListaProductos
-            DefaultTableModel modeloTabla = (DefaultTableModel) listaProductos.getJtProductos().getModel();
-            Inventario.mostratProductos(modeloTabla);
+            listaProductos.cargarProductosEnTabla();
         }
 
         // Limpiar los campos después de registrar

@@ -4,13 +4,14 @@
  */
 package vistas;
 
-import gestioninventario.Inventario;
 import javax.swing.table.DefaultTableModel;
-
 import gestioninventario.Producto;
-import gestioninventario.ProductoAseo;
-import gestioninventario.ProductoBebidas;
-import gestioninventario.ProductoEnlatados;
+import gestioninventario.Service.GestorProductos;
+import gestioninventario.Service.GestorStock;
+import gestioninventario.Service.IProductoManager;
+import gestioninventario.Service.IStockManager;
+import gestioninventario.Service.Inventario;
+
 /**
  * public class RegistrarProducto extends javax.swing.JFrame {
  *
@@ -27,17 +28,19 @@ public class ListaProductos extends javax.swing.JFrame {
     private String usuario;
     private RegistrarProducto registrarProductoInstance; // Variable para almacenar la instancia
     private Ventas ventanaVentasInstance; // Variable para almacenar la instancia
+    private IProductoManager productoManager;
+    private IStockManager stockManager;
 
-    public ListaProductos() {
-        initComponents();
-        configurarTabla();
-    }
-
-    public ListaProductos(String usuario) {
+    public ListaProductos(IProductoManager productoManager, IStockManager stockManager, String usuario) {
+        this.productoManager = productoManager;
+        this.stockManager = stockManager;
         this.usuario = usuario;
         initComponents();
         configurarTabla();
-        inicializarInventario(); // Inicializar inventario inicial
+        cargarProductosEnTabla();
+    }
+    public void setUsuario(String usuario){
+        this.usuario = usuario;
     }
 
     private void configurarTabla() {
@@ -47,36 +50,20 @@ public class ListaProductos extends javax.swing.JFrame {
         jtProductos.setModel(modeloTabla);
     }
 
-    private void inicializarInventario() {
-        DefaultTableModel model = (DefaultTableModel) jtProductos.getModel();
+    public void cargarProductosEnTabla() {
+        modeloTabla.setRowCount(0); // Limpiar la tabla antes de agregar los productos
 
-        // Registrar productos iniciales
-        Producto cocaCola = new ProductoBebidas("Coca-Cola", 101, "Bebida", "Coca-Cola Company", "2025-06-15", 1500.00);
-        Producto jugoNaranja = new ProductoBebidas("Jugo de Naranja", 102, "Bebida", "Del Valle", "2024-12-01", 1200.00);
-        Inventario.registrarProducto(cocaCola, 200);
-        Inventario.registrarProducto(jugoNaranja, 160);
-
-        Producto atun = new ProductoEnlatados("Atún en Agua", 201, "Enlatado", "Herdez", "2026-01-10", 2800.00);
-        Producto frijoles = new ProductoEnlatados("Frijoles Negros", 202, "Enlatado", "La Costeña", "2025-09-05", 1750.00);
-        Inventario.registrarProducto(atun, 300);
-        Inventario.registrarProducto(frijoles, 50);
-
-        Producto jabon = new ProductoAseo("Jabón Antibacterial", 301, "Aseo", "Protex", "2026-03-01", 950);
-        Producto shampoo = new ProductoAseo("Shampoo Herbal", 302, "Aseo", "Pantene", "2025-11-20", 3400);
-        Inventario.registrarProducto(jabon, 71);
-        Inventario.registrarProducto(shampoo, 25);
-
-        // Mostrar los productos en la tabla
-        Inventario.mostratProductos(model);
-    }
-
-    public void agregarProducto(Object producto) {
-        DefaultTableModel modeloTabla = (DefaultTableModel) jtProductos.getModel();
-        Inventario.mostratProductos(modeloTabla);
-    }
-
-    public javax.swing.JTable getJtProductos() {
-        return jtProductos;
+        for (Producto producto : productoManager.obtenerTodosLosProductos().values()) {
+            modeloTabla.addRow(new Object[]{
+                producto.getIdProducto(),
+                producto.getNombre(),
+                producto.getTipoProducto(),
+                producto.getPrecio(),
+                stockManager.obtenerStock(producto),
+                producto.getProveedor(),
+                producto.getFechaVencimiento()
+            });
+        }
     }
 
     /**
@@ -236,7 +223,9 @@ public class ListaProductos extends javax.swing.JFrame {
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         if (registrarProductoInstance == null || !registrarProductoInstance.isVisible()) {
-            registrarProductoInstance = new RegistrarProducto(this);
+            Inventario inventario = new Inventario(productoManager, stockManager);
+            
+            registrarProductoInstance = new RegistrarProducto(this, inventario);
             registrarProductoInstance.setVisible(true);
         } else {
             registrarProductoInstance.toFront(); // Llevar la ventana al frente si ya está abierta
@@ -245,7 +234,8 @@ public class ListaProductos extends javax.swing.JFrame {
 
     private void btnVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVentaActionPerformed
         if (ventanaVentasInstance == null || !ventanaVentasInstance.isVisible()) {
-            ventanaVentasInstance = new Ventas(usuario, jtProductos);
+            
+            ventanaVentasInstance = new Ventas(productoManager, stockManager, usuario);
             ventanaVentasInstance.setVisible(true);
         } else {
             ventanaVentasInstance.toFront(); // Llevar la ventana al frente si ya está abierta

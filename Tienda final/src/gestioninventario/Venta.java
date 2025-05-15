@@ -4,28 +4,30 @@
  */
 package gestioninventario;
 
+import gestioninventario.Service.IStockManager;
 import java.util.*;
 
 public class Venta {
 
     private final Map<Producto, Integer> productos = new HashMap<>(); // Almacena los productos a vender
-    private final Map<Producto, Double> descuentos = new HashMap<>(); // Nuevo HashMap para descuentos
+    private final Map<Producto, Double> descuentos = new HashMap<>(); // Nuevo HashMap para descuentos 
     private String cliente;
     private Date fecha;
     private double monto; // Atributo para almacenar el monto total de la venta
     private Usuario vendedor;
+    private final IStockManager stockManager; // dependencia para gestionar el Stock
 
-    public Venta() {
+    public Venta(IStockManager stockManager) {
+        this.stockManager = stockManager;
     }
 
     public void agregarProductoEnLista(Producto producto, int cantidad, double descuento) {
-        int idProducto = producto.getIdProducto();
-        int stockDisponible = Inventario.obtenerStock(idProducto);
+        int stockDisponible = stockManager.obtenerStock(producto);
         if (stockDisponible >= cantidad) {
             productos.put(producto, cantidad);
             descuentos.put(producto, descuento); // Guardar el descuento
         } else {
-            System.out.println("Stock insuficiente para el producto: tenemos solo " + stockDisponible);
+            System.out.println("Stock insuficiente para el producto: tenemos solo " + stockDisponible);   // esto debe ser una excepcion
         }
     }
 
@@ -47,10 +49,9 @@ public class Venta {
         for (Map.Entry<Producto, Integer> entry : productos.entrySet()) {
             Producto producto = entry.getKey();
             Integer cantidad = entry.getValue();
-            Inventario.actualizarStock(producto, cantidad);
-            int cantidadFinal = Inventario.obtenerStock(producto.getIdProducto());
-            System.out.println("Producto: " + producto.getNombre() + ", Cantidad final: " + cantidadFinal);
-            
+            stockManager.actualizarStock(producto, cantidad);
+            int cantidadFinal = stockManager.obtenerStock(producto);
+            System.out.println("Producto: " + producto.getNombre() + ", Cantidad final: " + cantidadFinal); //esto se debe actualizar en la tabla del inventario
         }
     }
 
