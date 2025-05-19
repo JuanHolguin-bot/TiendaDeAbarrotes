@@ -30,7 +30,7 @@ public class LogicRepository {
             
             while(s.hasNextLine()){
                 String loginLine = s.nextLine();
-                var login = new Login(loginLine.split("|")[0],loginLine.split("|")[1]);
+                var login = new Login(loginLine.split("\\|")[0],loginLine.split("\\|")[1]);
                 logins.add(login);
                 System.out.println("Login obteined: " + login.getUsername());
             }

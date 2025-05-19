@@ -139,11 +139,11 @@ public class VistaLogin extends javax.swing.JFrame {
         String password = new String(txtfield.getPassword()).trim();
 
         if (username.equals("") || password.equals("")) {
-            JOptionPane.showMessageDialog(this, "Por favor ingrese usuario y contraseña", "Login alert", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Por favor ingrese usuario y contraseña", "Login alert", JOptionPane.WARNING_MESSAGE);
         } else {
             var userValid = serviceLogin.validateUserAndPassword(username, password);
             if (!userValid) {
-                JOptionPane.showMessageDialog(this, "Usuario y contraseña inválidos", "Login alert", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Usuario y contraseña inválidos", "Login alert", JOptionPane.ERROR_MESSAGE);
             } else {
                 VistaInventario adminSet = new VistaInventario(username);
                 adminSet.setVisible(true);
