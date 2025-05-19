@@ -37,7 +37,7 @@ public class LogicRepository {
             
             return logins;
         }catch(Exception exe){
-            return null;
+            return new ArrayList<>();
         }
     }
     

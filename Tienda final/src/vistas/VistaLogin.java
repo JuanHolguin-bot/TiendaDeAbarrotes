@@ -6,7 +6,6 @@ package vistas;
 
 import LoginApp.ServiceLogin;
 import gestioninventario.Usuario;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -136,20 +135,20 @@ public class VistaLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        if(txtfield.getText().trim().equals("") || txtUser.getText().trim().equals("")){
-            var userValid = serviceLogin.validateUserAndPassword(txtfield.getText().trim(),txtUser.getText().trim());
-            
-            if(!userValid){
-                JOptionPane.showMessageDialog(null, "Usuario y contraseña invalidas","Login alert",JOptionPane.ERROR_MESSAGE);
-               
+        String username = txtUser.getText().trim();
+        String password = new String(txtfield.getPassword()).trim();
+
+        if (username.equals("") || password.equals("")) {
+            JOptionPane.showMessageDialog(this, "Por favor ingrese usuario y contraseña", "Login alert", JOptionPane.WARNING_MESSAGE);
+        } else {
+            var userValid = serviceLogin.validateUserAndPassword(username, password);
+            if (!userValid) {
+                JOptionPane.showMessageDialog(this, "Usuario y contraseña inválidos", "Login alert", JOptionPane.ERROR_MESSAGE);
+            } else {
+                VistaInventario adminSet = new VistaInventario(username);
+                adminSet.setVisible(true);
+                this.dispose();
             }
-                
-        }else{
-            VistaInventario adminSet;
-            adminSet = new VistaInventario();
-            adminSet.setVisible(true);
-            this.dispose();
-            
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 

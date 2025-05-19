@@ -28,9 +28,9 @@ public class VistaInventario extends javax.swing.JFrame {
     private VistaRegistrarProducto registrarProductoInstance; // Variable para almacenar la instancia
     private VistaVentas ventanaVentasInstance; // Variable para almacenar la instancia
 
+    
+
     public VistaInventario() {
-        initComponents();
-        configurarTabla();
     }
 
     public VistaInventario(String usuario) {
