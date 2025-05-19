@@ -4,16 +4,19 @@
  */
 package vistas;
 
+import LoginApp.ServiceLogin;
 import gestioninventario.Usuario;
-import enums.RolUser;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author jose_
  */
 public class VistaLogin extends javax.swing.JFrame {
+    
+    private ServiceLogin serviceLogin;
 
     private List<Usuario> usuarios;
 
@@ -22,23 +25,9 @@ public class VistaLogin extends javax.swing.JFrame {
      */
     public VistaLogin() {
         initComponents();
-        inicializarUsuarios(); // Inicializar usuarios
+        serviceLogin = new ServiceLogin();
     }
-
-    private void inicializarUsuarios() {
-        usuarios = new ArrayList<>();
-        usuarios.add(new Usuario(1, RolUser.ADMIN, "admin", "1234"));
-        usuarios.add(new Usuario(2, RolUser.CAJERO, "cajero1", "1234"));
-    }
-
-    private Usuario buscarUsuario(String nombre, String password) {
-        for (Usuario usuario : usuarios) {
-            if (usuario.validarCredenciales(nombre, password)) {
-                return usuario;
-            }
-        }
-        return null; // Usuario no encontrado
-    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -147,17 +136,20 @@ public class VistaLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        String username = txtUser.getText();
-        String password = new String(txtfield.getPassword());
-        System.out.println("boton presionado");
-        Usuario usuario = buscarUsuario(username, password);
-        if (usuario != null) {
+        if(txtfield.getText().trim().equals("") || txtUser.getText().trim().equals("")){
+            var userValid = serviceLogin.validateUserAndPassword(txtfield.getText().trim(),txtUser.getText().trim());
             
-            VistaInventario adminSet = new VistaInventario(username);
+            if(!userValid){
+                JOptionPane.showMessageDialog(null, "Usuario y contraseña invalidas","Login alert",JOptionPane.ERROR_MESSAGE);
+               
+            }
+                
+        }else{
+            VistaInventario adminSet;
+            adminSet = new VistaInventario();
             adminSet.setVisible(true);
             this.dispose();
-        } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
