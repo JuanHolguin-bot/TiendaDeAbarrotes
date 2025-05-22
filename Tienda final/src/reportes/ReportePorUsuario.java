@@ -4,7 +4,7 @@
  */
 package reportes;
 
-import gestioninventario.Venta;
+import Entities.Venta;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
