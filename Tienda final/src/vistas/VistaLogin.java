@@ -4,7 +4,7 @@
  */
 package vistas;
 
-import gestioninventario.Usuario;
+import Entities.Usuario;
 import enums.RolUser;
 import java.util.ArrayList;
 import java.util.List;
