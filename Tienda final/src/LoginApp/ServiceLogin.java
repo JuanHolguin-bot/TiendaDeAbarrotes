@@ -9,5 +9,25 @@ package LoginApp;
  * @author User
  */
 public class ServiceLogin {
+    private LogicRepository logicRepository;
+
+    public ServiceLogin() {
+        logicRepository = new LogicRepository();
+    }
+    
+    public boolean validateUserAndPassword(String username, String password){
+        var logins = logicRepository.getLogins();
+        
+        for(var login : logins){
+            if(login.getUsername().equals(username) && login.getPassword().equals(password)){
+                return true;
+            }
+        }
+        
+        return false;
+    }
+     
+    
+    
     
 }
