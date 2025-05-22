@@ -4,25 +4,34 @@
  */
 package vistas;
 
-import Entities.Inventario;
 import Entities.Producto;
+import gestioninventario.Service.IProductoManager;
+import gestioninventario.Service.IStockManager;
 import Entities.Venta;
-
+import gestioninventario.Service.GestorVenta;
 
 /**
  *
  * @author jose_
  */
-public class VistaVentas extends javax.swing.JFrame {
-    
+public class Ventas extends javax.swing.JFrame {
 
-    public VistaVentas(String usuario, javax.swing.JTable jtProductos) {
+    private IProductoManager productoManager;
+    private IStockManager stockManager;
+    private Venta venta;
+    private GestorVenta gestorVenta;
+    private ListaProductos listaProductos;
+
+    public Ventas(IProductoManager productoManager, IStockManager stockManager, String usuario, ListaProductos listaProductos) {
+        this.productoManager = productoManager;
+        this.stockManager = stockManager;
+        this.venta = new Venta();
+        this.gestorVenta = new GestorVenta(stockManager);
+        this.listaProductos = listaProductos;
         initComponents();
-        
+
         txtUsuario.setText(usuario);
         txtUsuario.setEditable(false);
-
-        
         txtProducto.setEditable(false);
         txtPrecioVenta.setEditable(false);
         txtStock.setEditable(false);
@@ -35,17 +44,11 @@ public class VistaVentas extends javax.swing.JFrame {
 
         // Llenar el combo box con los IDs de los productos
         cbIdProducto.removeAllItems();
-        for (int i = 0; i < jtProductos.getRowCount(); i++) {
-            String idProducto = jtProductos.getValueAt(i, 0).toString();
-            cbIdProducto.addItem(idProducto);
+        for (Producto producto : productoManager.obtenerTodosLosProductos().values()) {
+            cbIdProducto.addItem(String.valueOf(producto.getIdProducto()));
         }
     }
-    public VistaVentas(String usuario) {
-        initComponents();
-        txtUsuario.setText(usuario);
-        txtUsuario.setEditable(false); // Desactivar edición
-    }
-    Venta v = new Venta();
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -247,6 +250,8 @@ public class VistaVentas extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        jScrollPane1.setViewportView(null);
+
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -298,7 +303,7 @@ public class VistaVentas extends javax.swing.JFrame {
                 .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnGenerarVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 145, Short.MAX_VALUE)
                 .addComponent(label, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(txtTotalPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -324,10 +329,9 @@ public class VistaVentas extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -387,19 +391,17 @@ public class VistaVentas extends javax.swing.JFrame {
             try {
                 int id = Integer.parseInt(idSeleccionado);
 
-                // Buscar el producto en el inventario
-                for (Producto p : Inventario.productos.values()) {
-                    if (id == p.getIdProducto()) {
-                        String nombre = p.getNombre();
-                        double precio = p.getPrecio(); // Asegúrate de que este valor sea un double
-                        int stock = Inventario.obtenerStock(p.getIdProducto());
+                // Buscar el producto usando productoManager
+                Producto producto = productoManager.obtenerProducto(id);
+                if (producto != null) {
+                    String nombre = producto.getNombre();
+                    double precio = producto.getPrecio(); // Asegúrate de que este valor sea un double
+                    int stock = stockManager.obtenerStock(producto);
 
-                        // Actualizar los campos de texto
-                        txtProducto.setText(nombre);
-                        txtPrecioVenta.setText(String.valueOf(precio)); // Convertir a String
-                        txtStock.setText(String.valueOf(stock));
-                        break;
-                    }
+                    // Actualizar los campos de texto
+                    txtProducto.setText(nombre);
+                    txtPrecioVenta.setText(String.valueOf(precio)); // Convertir a String
+                    txtStock.setText(String.valueOf(stock));
                 }
             } catch (NumberFormatException e) {
                 javax.swing.JOptionPane.showMessageDialog(this, "El ID del producto no es válido.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -410,68 +412,78 @@ public class VistaVentas extends javax.swing.JFrame {
     }//GEN-LAST:event_cbIdProductoActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        // Obtener los valores de los campos de texto
-
-        String idProducto = (String) cbIdProducto.getSelectedItem();
-        int id = Integer.parseInt(idProducto);
-        String nombreProducto = txtProducto.getText();
-        double precio = Double.parseDouble(txtPrecioVenta.getText());
-        int cantidad = Integer.parseInt(txtCantidadVenta1.getText());
-        double descuento = Double.parseDouble(txtDescuento.getText());
-
-        // Validar que los campos no estén vacíos
-        if (id <= 0 || nombreProducto.isEmpty() || precio <= 0 || cantidad <= 0 || descuento < 0) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // clase venta e inventario 
-        Producto producto = null;
-        for (Producto p : Inventario.productos.values()) {
-            if (id == p.getIdProducto()) {
-                producto = p;
-            }
-        }
-
-        // agregar producto a la lista de objeros para vender 
-        v.agregarProductoEnLista(producto, cantidad, descuento);
-
         try {
-            // Agregar los datos a la tabla
-            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
-            model.addRow(new Object[]{id, nombreProducto, precio, cantidad, descuento, v.calcularTotalPorProducto(precio, cantidad, descuento)});
-
-            // Actualizar el total a pagar
-            actualizarTotalPagar();
-
-            // Limpiar los campos después de agregar
-            txtProducto.setText("");
-            txtPrecioVenta.setText("");
-            txtCantidadVenta1.setText("");
-            txtDescuento.setText("");
-            cbIdProducto.setSelectedIndex(-1);
-        } catch (NumberFormatException e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, ingrese valores numéricos válidos para precio, cantidad y descuento.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_btnAgregarActionPerformed
-
-// Método para validar los campos
-    private boolean validarCampos() {
-        try {
+            // Obtener los valores de los campos de texto
             int idProducto = Integer.parseInt((String) cbIdProducto.getSelectedItem());
             String nombreProducto = txtProducto.getText();
             double precio = Double.parseDouble(txtPrecioVenta.getText());
             int cantidad = Integer.parseInt(txtCantidadVenta1.getText());
             double descuento = Double.parseDouble(txtDescuento.getText());
 
-            return idProducto <= 0 || !nombreProducto.isEmpty() || precio <= 0 || cantidad <= 0 || descuento <= 0
-                    || precio > 0 || cantidad > 0 || descuento > 0;
+            // Validar que los campos no estén vacíos
+            if (idProducto <= 0 || nombreProducto.isEmpty() || precio <= 0 || cantidad <= 0 || descuento < 0) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Obtener el producto y agregarlo a la venta 
+            Producto producto = productoManager.obtenerProducto(idProducto);
+            if (producto != null) {
+                // agregar producto a la lista de objetos para vender 
+                gestorVenta.agregarProductoAVenta(venta, producto, cantidad, descuento);
+            }
+
+            // Agregar los datos a la tabla
+            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
+            double totalFila = gestorVenta.calcularTotalPorProducto(precio, cantidad, descuento);
+            model.addRow(new Object[]{idProducto, nombreProducto, precio, cantidad, descuento, totalFila});
+
+            // Actualizar el total a pagar
+            actualizarTotalPagar();
+            limpiarCampos();
+
         } catch (NumberFormatException e) {
-            return false; // Si ocurre un error de formato, los campos no son válidos
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, ingrese valores numéricos válidos para precio, cantidad y descuento.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void txtTotalPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalPagarActionPerformed
+        txtTotalPagar.setEditable(false);
+    }//GEN-LAST:event_txtTotalPagarActionPerformed
+
+    private void btnGenerarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarVentaActionPerformed
+        try {
+            String nombreCliente = txtCliente.getText();
+            if (nombreCliente.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Por favor, ingrese el nombre del cliente.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            venta.setCliente(nombreCliente);
+            venta.setMonto(gestorVenta.calcularMontoTotal(venta));
+            gestorVenta.generarVenta(venta);
+            
+            if(listaProductos != null){
+                listaProductos.cargarProductosEnTabla();
+            }
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Venta generada exitosamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Ocurrió un error al generar la venta: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_btnGenerarVentaActionPerformed
+
+    private void txtPrecioVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioVentaActionPerformed
+        txtTotalPagar.setEditable(false);
+    }//GEN-LAST:event_txtPrecioVentaActionPerformed
+    private void actualizarTotalPagar() {
+        double totalPagar = gestorVenta.calcularMontoTotal(venta);
+        txtTotalPagar.setText(String.format("%.2f", totalPagar));
     }
 
-// Método para limpiar los campos después de agregar un producto
+    // Método para limpiar los campos después de agregar un producto
     private void limpiarCampos() {
         txtProducto.setText("");
         txtPrecioVenta.setText("");
@@ -480,36 +492,6 @@ public class VistaVentas extends javax.swing.JFrame {
         cbIdProducto.setSelectedIndex(-1);
     }
 
-    private void txtTotalPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalPagarActionPerformed
-        txtTotalPagar.setEditable(false);
-    }//GEN-LAST:event_txtTotalPagarActionPerformed
-
-    private void btnGenerarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarVentaActionPerformed
-        String nCliente = txtCliente.getText();
-        // generar la venta con el metodo de la clase Venta 
-       
-        v.generarVenta();
-        this.dispose();
-
-    }//GEN-LAST:event_btnGenerarVentaActionPerformed
-
-    private void txtPrecioVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioVentaActionPerformed
-        txtTotalPagar.setEditable(false);
-    }//GEN-LAST:event_txtPrecioVentaActionPerformed
-
-    // Si no se encuentra el producto, limpiar los campos
-    private void actualizarTotalPagar() {
-        double totalPagar = 0.0;
-
-        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
-        for (int i = 0; i < model.getRowCount(); i++) {
-            // Obtener el valor de la columna "Total" (última columna)
-            double totalFila = (double) model.getValueAt(i, 5);
-            totalPagar += totalFila;
-        }
-        // Mostrar el total en el campo txtTotalPagar
-        txtTotalPagar.setText(String.format("%.2f", totalPagar));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;

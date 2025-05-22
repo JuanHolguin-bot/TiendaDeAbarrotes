@@ -7,34 +7,35 @@
  */
 package vistas;
 
-import Entities.Inventario;
+import gestioninventario.Service.Inventario;
 import Entities.Producto;
 import Entities.ProductoAseo;
 import Entities.ProductoBebidas;
 import Entities.ProductoEnlatados;
-import javax.swing.table.DefaultTableModel;
+
 
 /**
  *
  * @author jose_
  */
-public class VistaRegistrarProducto extends javax.swing.JFrame {
+public class RegistrarProducto extends javax.swing.JFrame {
 
-    private VistaInventario listaProductos;
+    private ListaProductos listaProductos;
+    private Inventario inventario;
 
-    public VistaRegistrarProducto(VistaInventario listaProductos) {
+    public RegistrarProducto(ListaProductos listaProductos, Inventario inventario) {
         this.listaProductos = listaProductos;
+        this.inventario = inventario;
         initComponents();
     }
 
-    public VistaInventario getListaProductos() {
+    public ListaProductos getListaProductos() {
         return listaProductos;
     }
 
-    public void setListaProductos(VistaInventario listaProductos) {
+    public void setListaProductos(ListaProductos listaProductos) {
         this.listaProductos = listaProductos;
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -325,12 +326,10 @@ public class VistaRegistrarProducto extends javax.swing.JFrame {
 
         if (producto != null) {
             // Registrar el producto en el inventario
-            Inventario.registrarProducto(producto, cantidad);
-            Inventario.actualizarStock(producto, cantidad);
+            inventario.registrarProducto(producto, cantidad);
 
             // Actualizar la tabla de ListaProductos
-            DefaultTableModel modeloTabla = (DefaultTableModel) listaProductos.getJtProductos().getModel();
-            Inventario.mostratProductos(modeloTabla);
+            listaProductos.cargarProductosEnTabla();
         }
 
         // Limpiar los campos después de registrar
