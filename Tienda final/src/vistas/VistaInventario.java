@@ -4,13 +4,13 @@
  */
 package vistas;
 
-import gestioninventario.Inventario;
+import Entities.Inventario;
 import javax.swing.table.DefaultTableModel;
 
-import gestioninventario.Producto;
-import gestioninventario.ProductoAseo;
-import gestioninventario.ProductoBebidas;
-import gestioninventario.ProductoEnlatados;
+import Entities.Producto;
+import Entities.ProductoAseo;
+import Entities.ProductoBebidas;
+import Entities.ProductoEnlatados;
 /**
  * public class RegistrarProducto extends javax.swing.JFrame {
  *

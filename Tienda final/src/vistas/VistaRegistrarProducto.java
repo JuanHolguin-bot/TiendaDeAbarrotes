@@ -7,11 +7,11 @@
  */
 package vistas;
 
-import gestioninventario.Inventario;
-import gestioninventario.Producto;
-import gestioninventario.ProductoAseo;
-import gestioninventario.ProductoBebidas;
-import gestioninventario.ProductoEnlatados;
+import Entities.Inventario;
+import Entities.Producto;
+import Entities.ProductoAseo;
+import Entities.ProductoBebidas;
+import Entities.ProductoEnlatados;
 import javax.swing.table.DefaultTableModel;
 
 /**

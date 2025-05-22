@@ -4,9 +4,9 @@
  */
 package reportes;
 
-import gestioninventario.Venta;
-import gestioninventario.Producto;
-import gestioninventario.Inventario;
+import Entities.Venta;
+import Entities.Producto;
+import Entities.Inventario;
 import java.util.List;
 
 

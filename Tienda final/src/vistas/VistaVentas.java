@@ -4,9 +4,9 @@
  */
 package vistas;
 
-import gestioninventario.Inventario;
-import gestioninventario.Producto;
-import gestioninventario.Venta;
+import Entities.Inventario;
+import Entities.Producto;
+import Entities.Venta;
 
 
 /**
