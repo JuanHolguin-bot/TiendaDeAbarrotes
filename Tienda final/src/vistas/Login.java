@@ -13,14 +13,15 @@ import java.util.List;
  *
  * @author jose_
  */
-public class VistaLogin extends javax.swing.JFrame {
+public class Login extends javax.swing.JFrame {
 
     private List<Usuario> usuarios;
-
+    private ListaProductos listaProductos;
     /**
      * Creates new form Login
      */
-    public VistaLogin() {
+    public Login(ListaProductos listaProductos) {
+        this.listaProductos = listaProductos;
         initComponents();
         inicializarUsuarios(); // Inicializar usuarios
     }
@@ -149,12 +150,11 @@ public class VistaLogin extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         String username = txtUser.getText();
         String password = new String(txtfield.getPassword());
-        System.out.println("boton presionado");
         Usuario usuario = buscarUsuario(username, password);
         if (usuario != null) {
-            
-            VistaInventario adminSet = new VistaInventario(username);
-            adminSet.setVisible(true);
+      
+            listaProductos.setUsuario(username);
+            listaProductos.setVisible(true);
             this.dispose();
         } else {
             javax.swing.JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
