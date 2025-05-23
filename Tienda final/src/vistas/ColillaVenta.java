@@ -18,8 +18,6 @@ public class ColillaVenta extends javax.swing.JPanel {
     public ColillaVenta() {
         initComponents();
     }
-<<<<<<< Updated upstream
-=======
     
     public ColillaVenta(String cajero, String cliente, javax.swing.table.TableModel modeloProductos) {
         initComponents();
@@ -27,7 +25,6 @@ public class ColillaVenta extends javax.swing.JPanel {
         TxtCliente.setText(cliente);
         jTable2.setModel(modeloProductos);
     }
->>>>>>> Stashed changes
 
     /**
      * This method is called from within the constructor to initialize the form.
