@@ -474,6 +474,7 @@ public class Ventas extends javax.swing.JFrame {
             }
 
             javax.swing.JOptionPane.showMessageDialog(this, "Venta generada exitosamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+<<<<<<< Updated upstream
             // --- ABRIR LA VISTA COLILLAVENTA ---
             vistas.ColillaVenta colilla = new vistas.ColillaVenta();
 
@@ -481,14 +482,25 @@ public class Ventas extends javax.swing.JFrame {
             colilla.TxtCajero.setText(txtUsuario.getText());
             colilla.jTable2.setModel(jTable1.getModel());
 
+=======
+
+            // Mostrar la colilla de venta
+            ColillaVenta colilla = new ColillaVenta();
+>>>>>>> Stashed changes
             javax.swing.JFrame frame = new javax.swing.JFrame("Colilla de Venta");
             frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
             frame.getContentPane().add(colilla);
             frame.pack();
+<<<<<<< Updated upstream
             frame.setSize(710, 550);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
             frame.setResizable(false);
+=======
+            frame.setLocationRelativeTo(this);
+            frame.setVisible(true);
+
+>>>>>>> Stashed changes
             this.dispose();
 
         } catch (Exception e) {
