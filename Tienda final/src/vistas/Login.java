@@ -5,9 +5,10 @@
 package vistas;
 
 import Entities.Usuario;
-import enums.RolUser;
+import LoginApp.ServiceLogin;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -15,30 +16,16 @@ import java.util.List;
  */
 public class Login extends javax.swing.JFrame {
 
+    private ServiceLogin serviceLogin;
+
     private List<Usuario> usuarios;
-    private ListaProductos listaProductos;
+
     /**
      * Creates new form Login
      */
-    public Login(ListaProductos listaProductos) {
-        this.listaProductos = listaProductos;
+    public Login() {
         initComponents();
-        inicializarUsuarios(); // Inicializar usuarios
-    }
-
-    private void inicializarUsuarios() {
-        usuarios = new ArrayList<>();
-        usuarios.add(new Usuario(1, RolUser.ADMIN, "admin", "1234"));
-        usuarios.add(new Usuario(2, RolUser.CAJERO, "cajero1", "1234"));
-    }
-
-    private Usuario buscarUsuario(String nombre, String password) {
-        for (Usuario usuario : usuarios) {
-            if (usuario.validarCredenciales(nombre, password)) {
-                return usuario;
-            }
-        }
-        return null; // Usuario no encontrado
+        serviceLogin = new ServiceLogin();
     }
 
     /**
@@ -148,16 +135,23 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        String username = txtUser.getText();
-        String password = new String(txtfield.getPassword());
-        Usuario usuario = buscarUsuario(username, password);
-        if (usuario != null) {
-      
-            listaProductos.setUsuario(username);
-            listaProductos.setVisible(true);
-            this.dispose();
+        String username = txtUser.getText().trim();
+        String password = new String(txtfield.getPassword()).trim();
+
+        if (username.equals("") || password.equals("")) {
+            JOptionPane.showMessageDialog(null, "Por favor ingrese usuario y contraseña", "Login alert", JOptionPane.WARNING_MESSAGE);
         } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            var userValid = serviceLogin.validateUserAndPassword(username, password);
+            if (!userValid) {
+                JOptionPane.showMessageDialog(null, "Usuario y contraseña inválidos", "Login alert", JOptionPane.ERROR_MESSAGE);
+            } else {
+                // Crear los managers necesarios para ListaProductos
+                gestioninventario.Service.IProductoManager productoManager = new gestioninventario.Service.GestorProductos();
+                gestioninventario.Service.IStockManager stockManager = new gestioninventario.Service.GestorStock();
+                ListaProductos adminSet = new ListaProductos(productoManager, stockManager, username);
+                adminSet.setVisible(true);
+                this.dispose();
+            }
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 

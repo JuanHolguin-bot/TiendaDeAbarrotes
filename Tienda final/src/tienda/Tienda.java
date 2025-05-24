@@ -36,9 +36,7 @@ public class Tienda {
         Producto cocaCola = new ProductoBebidas("Coca-Cola", 101, "Bebida", "Coca-Cola Company", "2025-06-15", 1500.00);
         inventario.registrarProducto(cocaCola, 200);
 
-        ListaProductos listaProductos = new ListaProductos(productoManager, stockManager, null);
-
-        Login login = new Login(listaProductos);
+        Login login = new Login();
         login.setVisible(true);
     }
     
