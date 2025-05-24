@@ -145,7 +145,6 @@ public class Login extends javax.swing.JFrame {
             if (!userValid) {
                 JOptionPane.showMessageDialog(null, "Usuario y contraseña inválidos", "Login alert", JOptionPane.ERROR_MESSAGE);
             } else {
-                // Crear los managers necesarios para ListaProductos
                 gestioninventario.Service.IProductoManager productoManager = new gestioninventario.Service.GestorProductos();
                 gestioninventario.Service.IStockManager stockManager = new gestioninventario.Service.GestorStock();
                 ListaProductos adminSet = new ListaProductos(productoManager, stockManager, username);
