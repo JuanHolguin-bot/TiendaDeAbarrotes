@@ -4,6 +4,8 @@
  */
 package LoginApp;
 
+import java.io.IOException;
+
 /**
  *
  * @author User
@@ -11,7 +13,7 @@ package LoginApp;
 public class ServiceLogin {
     private LogicRepository logicRepository;
 
-    public ServiceLogin() {
+    public ServiceLogin() throws IOException {
         logicRepository = new LogicRepository();
     }
     
@@ -27,7 +29,9 @@ public class ServiceLogin {
         return false;
     }
      
-    
+    public boolean registerUser(Login login) throws IOException{
+        return logicRepository.registerUser(login);
+    }
     
     
 }

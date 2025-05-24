@@ -6,9 +6,10 @@ package vistas;
 
 import Entities.Usuario;
 import LoginApp.ServiceLogin;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 import javax.swing.JOptionPane;
+import Vistas.Login;
 
 /**
  *
@@ -19,14 +20,27 @@ public class Login extends javax.swing.JFrame {
     private ServiceLogin serviceLogin;
 
     private List<Usuario> usuarios;
+    
+    private RegistrarUsuario registrarUsuario;
 
     /**
      * Creates new form Login
      */
-    public Login() {
+    public Login() throws IOException {
         initComponents();
         serviceLogin = new ServiceLogin();
+        
     }
+
+    public RegistrarUsuario getRegistrarUsuario() {
+        return registrarUsuario;
+    }
+
+    public void setRegistrarUsuario(RegistrarUsuario registrarUsuario) {
+        this.registrarUsuario = registrarUsuario;
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -154,6 +168,15 @@ public class Login extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
+    private void InitianComponentLoginstatic {
+    
+    if(Login == null){
+       login = new Login(); 
+    }
+    
+    }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnRegister;
