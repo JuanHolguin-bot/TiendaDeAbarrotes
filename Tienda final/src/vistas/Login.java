@@ -9,7 +9,7 @@ import LoginApp.ServiceLogin;
 import java.io.IOException;
 import java.util.List;
 import javax.swing.JOptionPane;
-import Vistas.Login;
+
 
 /**
  *
@@ -145,6 +145,9 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
+
+
+
         // TODO add your handling code here:
     }//GEN-LAST:event_btnRegisterActionPerformed
 

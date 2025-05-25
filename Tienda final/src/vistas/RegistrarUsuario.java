@@ -36,7 +36,7 @@ public class RegistrarUsuario extends javax.swing.JInternalFrame {
         lblPassword = new javax.swing.JLabel();
         lblConfirmPassword = new javax.swing.JLabel();
         txtUserName = new javax.swing.JTextField();
-        registeUser = new javax.swing.JButton();
+        btnregisteUser = new javax.swing.JButton();
         txtPassword = new javax.swing.JPasswordField();
         txtConfirmPassword = new javax.swing.JPasswordField();
 
@@ -55,10 +55,10 @@ public class RegistrarUsuario extends javax.swing.JInternalFrame {
             }
         });
 
-        registeUser.setText("Register");
-        registeUser.addActionListener(new java.awt.event.ActionListener() {
+        btnregisteUser.setText("Register");
+        btnregisteUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                registeUserActionPerformed(evt);
+                btnregisteUserActionPerformed(evt);
             }
         });
 
@@ -80,7 +80,7 @@ public class RegistrarUsuario extends javax.swing.JInternalFrame {
                 .addContainerGap(106, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(registeUser, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnregisteUser, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(51, 51, 51))
         );
         layout.setVerticalGroup(
@@ -99,7 +99,7 @@ public class RegistrarUsuario extends javax.swing.JInternalFrame {
                     .addComponent(txtConfirmPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblConfirmPassword))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
-                .addComponent(registeUser)
+                .addComponent(btnregisteUser)
                 .addGap(41, 41, 41))
         );
 
@@ -110,7 +110,7 @@ public class RegistrarUsuario extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUserNameActionPerformed
 
-    private void registeUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registeUserActionPerformed
+    private void btnregisteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnregisteUserActionPerformed
         if(txtUserName.getText().trim().equals("") ||
            txtPassword.getText().trim().equals("") ||    
            txtConfirmPassword.getText().trim().equals("")){
@@ -127,19 +127,21 @@ public class RegistrarUsuario extends javax.swing.JInternalFrame {
         try {
             var serviceLogin = new ServiceLogin();
             var registerResult = serviceLogin.registerUser(login);
-            
+            if(registerResult)
+                JOptionPane.showMessageDialog(null, "El usuario se ha registrado correctamente!", "Register alert", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException ex) {
             Logger.getLogger(RegistrarUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "El usuario no pudo registrarse correctamente, por favor contacte su administrador", "Register alert", JOptionPane.ERROR_MESSAGE);
         }
         
-    }//GEN-LAST:event_registeUserActionPerformed
+    }//GEN-LAST:event_btnregisteUserActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnregisteUser;
     private javax.swing.JLabel lblConfirmPassword;
     private javax.swing.JLabel lblPassword;
     private javax.swing.JLabel lblUser;
-    private javax.swing.JButton registeUser;
     private javax.swing.JPasswordField txtConfirmPassword;
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUserName;
