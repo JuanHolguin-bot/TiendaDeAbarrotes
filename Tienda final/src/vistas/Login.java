@@ -6,6 +6,7 @@ package vistas;
 
 import Entities.Usuario;
 import LoginApp.ServiceLogin;
+import gestioninventario.Service.Inventario;
 import java.io.IOException;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -146,19 +147,12 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
-        if(RegistrarUsuario == null){
-            try {
-                registrarUsuario = new RegistrarUsuario();
-            } catch (Exception ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        if(!registrarUsuario.isVisible()){
-            if(registrarUsuario.isClosed()){
-                desktopPane.add(registrarUsuario);
-            }
-            registrarUsuario.show();
+        if (registrarUsuario == null || !registrarUsuario.isVisible()) {
+            
+            registrarUsuario = new RegistrarUsuario();
+            registrarUsuario.setVisible(true);
+        } else {
+            registrarUsuario.toFront(); // Llevar la ventana al frente si ya está abierta
         }
 
 

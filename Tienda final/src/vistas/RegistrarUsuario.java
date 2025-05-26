@@ -5,6 +5,7 @@
 package vistas;
 
 import LoginApp.ServiceLogin;
+import LoginApp.Login;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -114,7 +115,7 @@ public class RegistrarUsuario extends javax.swing.JInternalFrame {
         if(txtUserName.getText().trim().equals("") ||
            txtPassword.getText().trim().equals("") ||    
            txtConfirmPassword.getText().trim().equals("")){
-            JOptionPane.showMessageDialog(null, "Por favor ingrese usuario y contraseña", "Register alert", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Por favor ingrese usuario, contraseña y confirme su contraseña", "Register alert", JOptionPane.WARNING_MESSAGE);
             return;
         }
         
@@ -123,7 +124,7 @@ public class RegistrarUsuario extends javax.swing.JInternalFrame {
             return;
         }
         
-        Login login = new Login(txtUserName.getText(), txtPassword.getText());
+        Login login = new Login(txtUserName.getText().trim(), txtPassword.getText().trim());
         try {
             var serviceLogin = new ServiceLogin();
             var registerResult = serviceLogin.registerUser(login);
