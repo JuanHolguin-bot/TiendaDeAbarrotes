@@ -1,8 +1,9 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package vistas;
+
 
 import LoginApp.ServiceLogin;
 import LoginApp.Login;
@@ -10,15 +11,14 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-
 /**
  *
  * @author User
  */
-public class RegistrarUsuario extends javax.swing.JInternalFrame {
+public class RegistrarUsuario extends javax.swing.JFrame {
 
     /**
-     * Creates new form RegistrarUsuario
+     * Creates new form Registrar
      */
     public RegistrarUsuario() {
         initComponents();
@@ -41,8 +41,7 @@ public class RegistrarUsuario extends javax.swing.JInternalFrame {
         txtPassword = new javax.swing.JPasswordField();
         txtConfirmPassword = new javax.swing.JPasswordField();
 
-        setClosable(true);
-        setIconifiable(true);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         lblUser.setText("User");
 
@@ -78,7 +77,7 @@ public class RegistrarUsuario extends javax.swing.JInternalFrame {
                     .addComponent(txtUserName)
                     .addComponent(txtPassword)
                     .addComponent(txtConfirmPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
-                .addContainerGap(106, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnregisteUser, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -99,7 +98,7 @@ public class RegistrarUsuario extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtConfirmPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblConfirmPassword))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
                 .addComponent(btnregisteUser)
                 .addGap(41, 41, 41))
         );
@@ -113,30 +112,62 @@ public class RegistrarUsuario extends javax.swing.JInternalFrame {
 
     private void btnregisteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnregisteUserActionPerformed
         if(txtUserName.getText().trim().equals("") ||
-           txtPassword.getText().trim().equals("") ||    
-           txtConfirmPassword.getText().trim().equals("")){
+            txtPassword.getText().trim().equals("") ||
+            txtConfirmPassword.getText().trim().equals("")){
             JOptionPane.showMessageDialog(null, "Por favor ingrese usuario, contraseña y confirme su contraseña", "Register alert", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
+
         if(!txtPassword.getText().trim().equals(txtConfirmPassword.getText().trim())){
             JOptionPane.showMessageDialog(null, "Contraseña y Confirmar contraseña deben ser iguales", "Register alert", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
+
         Login login = new Login(txtUserName.getText().trim(), txtPassword.getText().trim());
         try {
             var serviceLogin = new ServiceLogin();
             var registerResult = serviceLogin.registerUser(login);
             if(registerResult)
-                JOptionPane.showMessageDialog(null, "El usuario se ha registrado correctamente!", "Register alert", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "El usuario se ha registrado correctamente!", "Register alert", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException ex) {
             Logger.getLogger(RegistrarUsuario.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "El usuario no pudo registrarse correctamente, por favor contacte su administrador", "Register alert", JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }//GEN-LAST:event_btnregisteUserActionPerformed
 
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(RegistrarUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(RegistrarUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(RegistrarUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(RegistrarUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> {
+            new RegistrarUsuario().setVisible(true);
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnregisteUser;
