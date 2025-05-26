@@ -12,7 +12,6 @@ import gestioninventario.Service.IProductoManager;
 import gestioninventario.Service.IStockManager;
 import gestioninventario.Service.Inventario;
 import java.io.IOException;
-import vistas.ListaProductos;
 import vistas.Login;
 
 
@@ -22,6 +21,7 @@ import vistas.Login;
  * @author jose_
  */
 public class Tienda {
+    private static Login loginInstance = null;
     /**
      *
      * @param args the command line arguments
@@ -37,8 +37,13 @@ public class Tienda {
         Producto cocaCola = new ProductoBebidas("Coca-Cola", 101, "Bebida", "Coca-Cola Company", "2025-06-15", 1500.00);
         inventario.registrarProducto(cocaCola, 200);
 
-        Login login = new Login();
-        login.setVisible(true);
+        if (loginInstance == null || !loginInstance.isVisible()) {
+            loginInstance = new Login();
+            loginInstance.setVisible(true);
+        } else {
+            loginInstance.toFront();
+            loginInstance.setVisible(true);
+        }
     }
     
 }
