@@ -9,6 +9,7 @@ import LoginApp.ServiceLogin;
 import java.io.IOException;
 import java.util.List;
 import javax.swing.JOptionPane;
+import vistas.RegistrarUsuario;
 
 
 /**
@@ -145,7 +146,20 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
-
+        if(RegistrarUsuario == null){
+            try {
+                registrarUsuario = new RegistrarUsuario();
+            } catch (Exception ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        if(!registrarUsuario.isVisible()){
+            if(registrarUsuario.isClosed()){
+                desktopPane.add(registrarUsuario);
+            }
+            registrarUsuario.show();
+        }
 
 
         // TODO add your handling code here:
@@ -171,13 +185,7 @@ public class Login extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
-    private void InitianComponentLoginstatic {
     
-    if(Login == null){
-       login = new Login(); 
-    }
-    
-    }
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
