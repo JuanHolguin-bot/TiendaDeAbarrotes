@@ -33,17 +33,15 @@ public class Tienda {
 
         Inventario inventario = new Inventario(productoManager, stockManager);
 
-        // Registrar productos
+        // Registrar productos  
         Producto cocaCola = new ProductoBebidas("Coca-Cola", 101, "Bebida", "Coca-Cola Company", "2025-06-15", 1500.00);
         inventario.registrarProducto(cocaCola, 200);
 
-        if (loginInstance == null || !loginInstance.isVisible()) {
+        if (loginInstance == null) {
             loginInstance = new Login();
             loginInstance.setVisible(true);
-        } else {
-            loginInstance.toFront();
-            loginInstance.setVisible(true);
         }
+
     }
     
 }

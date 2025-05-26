@@ -49,6 +49,11 @@ public class RegistrarUsuario extends javax.swing.JFrame {
 
         lblConfirmPassword.setText("Confirm Password");
 
+        txtUserName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtUserNameFocusLost(evt);
+            }
+        });
         txtUserName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtUserNameActionPerformed(evt);
@@ -127,14 +132,41 @@ public class RegistrarUsuario extends javax.swing.JFrame {
         try {
             var serviceLogin = new ServiceLogin();
             var registerResult = serviceLogin.registerUser(login);
-            if(registerResult)
-            JOptionPane.showMessageDialog(null, "El usuario se ha registrado correctamente!", "Register alert", JOptionPane.INFORMATION_MESSAGE);
+            if(registerResult){
+                JOptionPane.showMessageDialog(null, "El usuario se ha registrado correctamente!", "Register alert", JOptionPane.INFORMATION_MESSAGE);
+                txtUserName.setText("");
+                txtPassword.setText("");
+                txtConfirmPassword.setText("");
+            } else{
+               JOptionPane.showMessageDialog(null, "El usuario ya existe, intente con un nuevo nombre de usuario", "Register alert", JOptionPane.ERROR_MESSAGE);     
+            }        
         } catch (IOException ex) {
             Logger.getLogger(RegistrarUsuario.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "El usuario no pudo registrarse correctamente, por favor contacte su administrador", "Register alert", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            Logger.getLogger(RegistrarUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "El usuario no pudo registrarse correctamente, por favor contacte su administrador", "Register alert", JOptionPane.ERROR_MESSAGE);
+            
         }
 
     }//GEN-LAST:event_btnregisteUserActionPerformed
+
+    private void txtUserNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtUserNameFocusLost
+         if(txtUserName.getText().trim().equals("")){
+             JOptionPane.showMessageDialog(null, "El nombre de usuario es obligatorio!", "Register alert", JOptionPane.WARNING_MESSAGE);
+             return;
+            }
+             try {
+                 var serviceLogin = new ServiceLogin();
+                 if(serviceLogin.userExistInTheDataBase(txtUserName.getText().trim())){
+                   JOptionPane.showMessageDialog(null, "El nombre de usuario ya existe, intente con un nuevo nombre de usuario", "Register alert", JOptionPane.WARNING_MESSAGE);  
+                   txtUserName.requestFocus(true);
+                   txtUserName.setText("");
+                 }
+             } catch (IOException ex) {
+                 Logger.getLogger(RegistrarUsuario.class.getName()).log(Level.SEVERE, null, ex);
+             }
+    }//GEN-LAST:event_txtUserNameFocusLost
 
     /**
      * @param args the command line arguments

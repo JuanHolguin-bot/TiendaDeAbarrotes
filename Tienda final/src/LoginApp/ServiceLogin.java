@@ -29,8 +29,25 @@ public class ServiceLogin {
         return false;
     }
      
-    public boolean registerUser(Login login) throws IOException{
+    public boolean registerUser(Login login) throws IOException, Exception{
+        var logins = logicRepository.getLogins();
+        var userExist = false;
+        
+        for(var loginTemp : logins){
+            if(loginTemp.getUsername().equals(login.getUsername())){
+                return false;
+            }
+        }
         return logicRepository.registerUser(login);
+    }
+    public boolean userExistInTheDataBase(String userName) {
+        var logins = logicRepository.getLogins();
+        for (var loginTmp : logins) {
+            if (loginTmp.getUsername().equals(userName)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     

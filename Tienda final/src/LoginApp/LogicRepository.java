@@ -4,6 +4,7 @@
  */
 package LoginApp;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,12 +18,10 @@ import java.util.Scanner;
  */
 public class LogicRepository {
     private final File file;
-    private final FileWriter fileWriter;
     public static final String RUTA = "C:\\Users\\User\\OneDrive\\Documents\\GitHub\\TiendaDeAbarrotes\\Login.txt";
 
     public LogicRepository() throws IOException {
         file = new File(RUTA);
-        fileWriter = new FileWriter(RUTA);
     }
     
     public List<Login> getLogins(){
@@ -42,20 +41,20 @@ public class LogicRepository {
             
             return logins;
         }catch(Exception exe){
-            return new ArrayList<>();
+            return null;
         }
     }
     
-    public boolean registerUser(Login login) throws IOException{
-        var logins = this.getLogins();
-        logins.add(login);    
-        
-        for(Login loginTemp : logins){
-            fileWriter.write(login.getUsername()+"|"+loginTemp.getPassword()+"\n");
+    public boolean registerUser(Login login) throws IOException, Exception{
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(RUTA, true))) {
+            var content = login.getUsername() + "|" + login.getPassword();
+            bufferedWriter.write(content);
+            bufferedWriter.newLine();
+        } catch (Exception exe) {
+            throw new Exception(exe.getMessage());
         }
-        
+
         return true; 
-        
     }
       
 }
