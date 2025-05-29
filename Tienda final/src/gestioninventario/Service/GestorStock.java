@@ -27,19 +27,6 @@ public class GestorStock implements IStockManager {
         stockRepositorio.guardarStockEnBD(stockPorId);
     }
 
-    public void sincronizarCargarDesdeStockRepositorio() {
-        stockProductos.clear();
-
-        Map<Integer, Integer> stockPorId = stockRepositorio.cargarStockDesdeBD();
-        
-        for(Map.Entry<Integer,Integer> entry : stockPorId.entrySet()){
-            Producto producto = GestorProductos.productos.get(entry.getKey());
-            if(producto != null){
-                stockProductos.put(producto,entry.getValue());
-            }
-        }
-    }
-
     //Methods 
     @Override
     public void registrarStock(Producto producto, int cantidadInicial) {

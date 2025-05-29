@@ -25,7 +25,6 @@ public class GestorStockRepositorio {
         var cliente = MongoClients.create("mongodb+srv://juanholguin3:1035974679@cluster0.lmisdxx.mongodb.net/");
         dataBase = cliente.getDatabase("TiendaDeAbarrotes");
         stockCollection = dataBase.getCollection("Stock");
-        cargarStockDesdeBD();
     }    
     
     public void guardarStockEnBD(Map<Integer, Integer> stockPorId) {
@@ -36,16 +35,5 @@ public class GestorStockRepositorio {
             stockCollection.replaceOne(filtro, doc, new ReplaceOptions().upsert(true));
         }
     }
-    
-    public Map<Integer,Integer> cargarStockDesdeBD(){
-        Map<Integer,Integer> stockPorId = new HashMap<>();
-        for (Document doc : stockCollection.find()){
-          Integer id = doc.getInteger("_id");
-          Integer stock = doc.getInteger("stock");
-          if (id != null && stock != null){
-              stockPorId.put(id, stock);
-          }
-        }
-        return stockPorId;
-    }
+   
 }

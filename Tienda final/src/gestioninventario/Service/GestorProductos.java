@@ -5,6 +5,7 @@
 package gestioninventario.Service;
 
 import Entities.Producto;
+import Repositorios.GestorProductosRepositorio;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,13 +15,15 @@ import java.util.Map;
  */
 public class GestorProductos implements IProductoManager {
 
-    //attributes 
-    static final Map<Integer, Producto> productos = new HashMap<>(); // idProducto , producto 
+    // attributes
+    static final Map<Integer, Producto> productos = new HashMap<>(); // idProducto , producto
+    private final GestorProductosRepositorio productoRepositorio = new GestorProductosRepositorio();
 
-    //Methods 
+    // Methods
     @Override
     public void registrarProducto(Producto producto) {
         productos.put(producto.getIdProducto(), producto);
+        productoRepositorio.guardarProducto(producto);
     }
 
     @Override
