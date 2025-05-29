@@ -15,7 +15,7 @@ import java.util.Map;
 public class GestorProductos implements IProductoManager {
 
     //attributes 
-    private final static Map<Integer, Producto> productos = new HashMap<>(); // idProducto , producto 
+    static final Map<Integer, Producto> productos = new HashMap<>(); // idProducto , producto 
 
     //Methods 
     @Override
