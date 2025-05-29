@@ -5,8 +5,10 @@
 package gestioninventario.Service;
 
 import Entities.Producto;
+import Repositorios.GestorStockRepositorio;
 import java.util.HashMap;
 import java.util.Map;
+
 /**
  *
  * @author Juan Holguin
@@ -15,11 +17,21 @@ public class GestorStock implements IStockManager {
 
     //Attributes
     private static Map<Producto, Integer> stockProductos = new HashMap<>(); //producto, Cantidad
+    private final GestorStockRepositorio stockRepositorio = new GestorStockRepositorio();
+
+    public void sincronizarGuardarEnStockRepositorio() {
+        Map<Integer, Integer> stockPorId = new HashMap<>();
+        for (Map.Entry<Producto, Integer> entry : stockProductos.entrySet()) {
+            stockPorId.put(entry.getKey().getIdProducto(), entry.getValue());
+        }
+        stockRepositorio.guardarStockEnBD(stockPorId);
+    }
 
     //Methods 
     @Override
     public void registrarStock(Producto producto, int cantidadInicial) {
         stockProductos.put(producto, cantidadInicial);
+        sincronizarGuardarEnStockRepositorio();
     }
 
     @Override
@@ -39,7 +51,6 @@ public class GestorStock implements IStockManager {
         }
 
         stockProductos.put(producto, cantidadActual - cantidad);
-        System.out.println("Stock actualizado. Cantidad final: " + stockProductos.get(producto));
     }
 
     @Override

@@ -50,7 +50,7 @@ public class ListaProductos extends javax.swing.JFrame {
 
     public void cargarProductosEnTabla() {
         modeloTabla.setRowCount(0); // Limpiar la tabla antes de agregar los productos
-
+        
         for (Producto producto : productoManager.obtenerTodosLosProductos().values()) {
             modeloTabla.addRow(new Object[]{
                 producto.getIdProducto(),
