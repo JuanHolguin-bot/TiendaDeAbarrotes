@@ -11,44 +11,30 @@ import java.io.IOException;
  * @author User
  */
 public class ServiceLogin {
-    private LogicRepository logicRepository;
 
-    public ServiceLogin() throws IOException {
-        logicRepository = new LogicRepository();
+    private LoginRepository loginRepository;
+
+    public ServiceLogin() {
+        loginRepository = new LoginRepository();
     }
-    
-    public boolean validateUserAndPassword(String username, String password){
-        var logins = logicRepository.getLogins();
-        
-        for(var login : logins){
-            if(login.getUsername().equals(username) && login.getPassword().equals(password)){
-                return true;
-            }
+
+    public boolean ValidateUserAndPassword(String username, String password) throws Exception {
+        var login = loginRepository.getLogin(username);
+
+        return login.getPassword().equals(password);
+    }
+
+    public boolean registerUser(Login login) throws IOException, Exception {
+        return loginRepository.registerUser(login);
+    }
+
+    public boolean userExistingInDataBase(String userName) {
+        var login = loginRepository.getLogin(userName);
+
+        if (login != null) {
+            return login.getUsername().equals(userName);
         }
-        
-        return false;
+        return false; 
     }
-     
-    public boolean registerUser(Login login) throws IOException, Exception{
-        var logins = logicRepository.getLogins();
-        var userExist = false;
-        
-        for(var loginTemp : logins){
-            if(loginTemp.getUsername().equals(login.getUsername())){
-                return false;
-            }
-        }
-        return logicRepository.registerUser(login);
-    }
-    public boolean userExistInTheDataBase(String userName) {
-        var logins = logicRepository.getLogins();
-        for (var loginTmp : logins) {
-            if (loginTmp.getUsername().equals(userName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    
+
 }

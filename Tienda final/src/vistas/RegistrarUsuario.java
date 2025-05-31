@@ -4,13 +4,13 @@
  */
 package vistas;
 
-
 import LoginApp.ServiceLogin;
 import LoginApp.Login;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author User
@@ -116,14 +116,14 @@ public class RegistrarUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_txtUserNameActionPerformed
 
     private void btnregisteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnregisteUserActionPerformed
-        if(txtUserName.getText().trim().equals("") ||
-            txtPassword.getText().trim().equals("") ||
-            txtConfirmPassword.getText().trim().equals("")){
+        if (txtUserName.getText().trim().equals("")
+                || txtPassword.getText().trim().equals("")
+                || txtConfirmPassword.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(null, "Por favor ingrese usuario, contraseña y confirme su contraseña", "Register alert", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        if(!txtPassword.getText().trim().equals(txtConfirmPassword.getText().trim())){
+        if (!txtPassword.getText().trim().equals(txtConfirmPassword.getText().trim())) {
             JOptionPane.showMessageDialog(null, "Contraseña y Confirmar contraseña deben ser iguales", "Register alert", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -132,40 +132,36 @@ public class RegistrarUsuario extends javax.swing.JFrame {
         try {
             var serviceLogin = new ServiceLogin();
             var registerResult = serviceLogin.registerUser(login);
-            if(registerResult){
+            if (registerResult) {
                 JOptionPane.showMessageDialog(null, "El usuario se ha registrado correctamente!", "Register alert", JOptionPane.INFORMATION_MESSAGE);
                 txtUserName.setText("");
                 txtPassword.setText("");
                 txtConfirmPassword.setText("");
-            } else{
-               JOptionPane.showMessageDialog(null, "El usuario ya existe, intente con un nuevo nombre de usuario", "Register alert", JOptionPane.ERROR_MESSAGE);     
-            }        
+            } else {
+                JOptionPane.showMessageDialog(null, "El usuario ya existe, intente con un nuevo nombre de usuario", "Register alert", JOptionPane.ERROR_MESSAGE);
+            }
         } catch (IOException ex) {
             Logger.getLogger(RegistrarUsuario.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "El usuario no pudo registrarse correctamente, por favor contacte su administrador", "Register alert", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
             Logger.getLogger(RegistrarUsuario.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "El usuario no pudo registrarse correctamente, por favor contacte su administrador", "Register alert", JOptionPane.ERROR_MESSAGE);
-            
+
         }
 
     }//GEN-LAST:event_btnregisteUserActionPerformed
 
     private void txtUserNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtUserNameFocusLost
-         if(txtUserName.getText().trim().equals("")){
-             JOptionPane.showMessageDialog(null, "El nombre de usuario es obligatorio!", "Register alert", JOptionPane.WARNING_MESSAGE);
-             return;
-            }
-             try {
-                 var serviceLogin = new ServiceLogin();
-                 if(serviceLogin.userExistInTheDataBase(txtUserName.getText().trim())){
-                   JOptionPane.showMessageDialog(null, "El nombre de usuario ya existe, intente con un nuevo nombre de usuario", "Register alert", JOptionPane.WARNING_MESSAGE);  
-                   txtUserName.requestFocus(true);
-                   txtUserName.setText("");
-                 }
-             } catch (IOException ex) {
-                 Logger.getLogger(RegistrarUsuario.class.getName()).log(Level.SEVERE, null, ex);
-             }
+        if (txtUserName.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(null, "El nombre de usuario es obligatorio!", "Register alert", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        var serviceLogin = new ServiceLogin();
+        if (serviceLogin.userExistingInDataBase(txtUserName.getText().trim())) {
+            JOptionPane.showMessageDialog(null, "El nombre de usuario ya existe, intente con un nuevo nombre de usuario", "Register alert", JOptionPane.WARNING_MESSAGE);
+            txtUserName.requestFocus(true);
+            txtUserName.setText("");
+        }
     }//GEN-LAST:event_txtUserNameFocusLost
 
     /**

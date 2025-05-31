@@ -8,8 +8,9 @@ import Entities.Usuario;
 import LoginApp.ServiceLogin;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-
 
 /**
  *
@@ -20,17 +21,18 @@ public class Login extends javax.swing.JFrame {
     private ServiceLogin serviceLogin;
 
     private List<Usuario> usuarios;
-    
+
     private RegistrarUsuario registrarUsuario;
 
     /**
      * Creates new form Login
+     *
      * @throws java.io.IOException
      */
     public Login() throws IOException {
         initComponents();
         serviceLogin = new ServiceLogin();
-        
+
     }
 
     public RegistrarUsuario getRegistrarUsuario() {
@@ -40,8 +42,6 @@ public class Login extends javax.swing.JFrame {
     public void setRegistrarUsuario(RegistrarUsuario registrarUsuario) {
         this.registrarUsuario = registrarUsuario;
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -147,44 +147,54 @@ public class Login extends javax.swing.JFrame {
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         if (registrarUsuario == null) {
-            
+
             registrarUsuario = new RegistrarUsuario();
-            
-        } if(!registrarUsuario.isVisible()){
-           
+
+        }
+        if (!registrarUsuario.isVisible()) {
+
             registrarUsuario.setVisible(true);
         } else {
-            
+
             registrarUsuario.toFront(); // Llevar la ventana al frente si ya está abierta
         }
-
 
         // TODO add your handling code here:
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+
         String username = txtUser.getText().trim();
         String password = new String(txtPassword.getPassword()).trim();
 
         if (username.equals("") || password.equals("")) {
             JOptionPane.showMessageDialog(null, "Por favor ingrese usuario y contraseña", "Login alert", JOptionPane.WARNING_MESSAGE);
         } else {
-            boolean userValid = serviceLogin.validateUserAndPassword(username, password);
-            if (!userValid) {
-                JOptionPane.showMessageDialog(null, "Usuario y contraseña inválidos", "Login alert", JOptionPane.ERROR_MESSAGE);
-            } else {
-                gestioninventario.Service.IProductoManager productoManager = new gestioninventario.Service.GestorProductos();
-                gestioninventario.Service.IStockManager stockManager = new gestioninventario.Service.GestorStock();
-                ListaProductos adminSet = new ListaProductos(productoManager, stockManager, username);
-                adminSet.setVisible(true);
-                this.dispose();
+
+            try {
+                boolean userValid;
+                userValid = serviceLogin.ValidateUserAndPassword(username, password);
+
+                if (!userValid) {
+                    JOptionPane.showMessageDialog(null, "Usuario y contraseña inválidos", "Login alert", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    
+                    gestioninventario.Service.IProductoManager productoManager = new gestioninventario.Service.GestorProductos();
+                    gestioninventario.Service.IStockManager stockManager = new gestioninventario.Service.GestorStock();
+                    ListaProductos adminSet = new ListaProductos(productoManager, stockManager, username);
+                    
+                    
+                    adminSet.setVisible(true);
+                    this.dispose();
+                    
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
-    
-    
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnRegister;

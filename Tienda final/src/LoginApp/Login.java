@@ -4,6 +4,8 @@
  */
 package LoginApp;
 
+import org.bson.Document;
+
 /**
  *
  * @author User
@@ -36,4 +38,11 @@ public class Login {
         this.password = password;
     }
      
+    public static Login desdeDocumento(Document doc){
+        return new Login(doc.getString("username"),doc.getString("password"));
+    }
+    
+    public Document toDocument(){
+        return new Document("username",username).append("password",password);
+    }
 }
