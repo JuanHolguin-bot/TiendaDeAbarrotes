@@ -26,7 +26,7 @@ public class GestorStockRepositorio {
         dataBase = cliente.getDatabase("TiendaDeAbarrotes");
         stockCollection = dataBase.getCollection("Stock");
     }    
-    
+
     public void guardarStockEnBD(Map<Integer, Integer> stockPorId) {
         for (Map.Entry<Integer, Integer> entry : stockPorId.entrySet()) {
             Document filtro = new Document("_id", entry.getKey());
@@ -35,5 +35,22 @@ public class GestorStockRepositorio {
             stockCollection.replaceOne(filtro, doc, new ReplaceOptions().upsert(true));
         }
     }
-   
+    
+    public Map<Integer,Integer> cargarStockDesdeBD() throws Exception{
+        Map<Integer,Integer> stockEnBd = new HashMap<>();
+        try{
+        for (Document doc : stockCollection.find()){
+            var id =  (Integer)doc.get("_id");
+            var stock = (Integer)doc.get("stock");
+            
+            if (id != null && stock != null){
+                stockEnBd.put(id,stock);
+            }
+        }
+        return stockEnBd;
+        }catch(Exception exe){
+            throw new Exception("Algo ha salido mal buscando el stock" + exe.getMessage());
+        }
+    }
+    
 }

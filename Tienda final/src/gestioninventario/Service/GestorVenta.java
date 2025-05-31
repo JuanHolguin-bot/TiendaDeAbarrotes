@@ -11,7 +11,7 @@ public class GestorVenta {
     }
 
     public void agregarProductoAVenta(Venta venta, Producto producto, int cantidad, double descuento) {
-        int stockDisponible = stockManager.obtenerStock(producto);
+        int stockDisponible = stockManager.obtenerStock(producto.getIdProducto());
         if (stockDisponible >= cantidad) {
             venta.agregarProducto(producto, cantidad, descuento);
         } else {
@@ -39,7 +39,7 @@ public class GestorVenta {
         for (var entry : venta.getProductos().entrySet()) {
             Producto producto = entry.getKey();
             int cantidad = entry.getValue();
-            stockManager.actualizarStock(producto, cantidad);
+            stockManager.actualizarStock(producto.getIdProducto(), cantidad);
         }
     }
 }

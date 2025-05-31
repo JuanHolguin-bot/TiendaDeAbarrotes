@@ -57,7 +57,7 @@ public class ListaProductos extends javax.swing.JFrame {
                 producto.getNombre(),
                 producto.getTipoProducto(),
                 producto.getPrecio(),
-                stockManager.obtenerStock(producto),
+                stockManager.obtenerStock(producto.getIdProducto()),
                 producto.getProveedor(),
                 producto.getFechaVencimiento()
             });

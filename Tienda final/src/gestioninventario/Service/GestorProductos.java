@@ -16,7 +16,7 @@ import java.util.Map;
 public class GestorProductos implements IProductoManager {
 
     // attributes
-    static final Map<Integer, Producto> productos = new HashMap<>(); // idProducto , producto
+    private static  Map<Integer, Producto> productos = new HashMap<>(); // idProducto , producto
     private final GestorProductosRepositorio productoRepositorio = new GestorProductosRepositorio();
 
     // Methods
@@ -30,10 +30,19 @@ public class GestorProductos implements IProductoManager {
     public Producto obtenerProducto(int idProducto) {
         return productos.get(idProducto);
     }
+    
 
     @Override
     public Map<Integer, Producto> obtenerTodosLosProductos() {
+        try {
+            productos = productoRepositorio.cargarProductodDesdeBd();
+        } catch (Exception e) {
+            // Maneja el error, por ejemplo:
+            System.out.println("Error al cargar productos: " + e.getMessage());
+            productos = new HashMap<>(); // O deja el mapa vacío
+        }
+        
         return productos;
     }
-
+    
 }

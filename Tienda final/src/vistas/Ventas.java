@@ -396,7 +396,7 @@ public class Ventas extends javax.swing.JFrame {
                 if (producto != null) {
                     String nombre = producto.getNombre();
                     double precio = producto.getPrecio(); // Asegúrate de que este valor sea un double
-                    int stock = stockManager.obtenerStock(producto);
+                    int stock = stockManager.obtenerStock(id);
 
                     // Actualizar los campos de texto
                     txtProducto.setText(nombre);
@@ -429,7 +429,7 @@ public class Ventas extends javax.swing.JFrame {
             // Obtener el producto y validar stock
             Producto producto = productoManager.obtenerProducto(idProducto);
             if (producto != null) {
-                int stockDisponible = stockManager.obtenerStock(producto);
+                int stockDisponible = stockManager.obtenerStock(idProducto);
                 if (cantidad > stockDisponible) {
                     javax.swing.JOptionPane.showMessageDialog(this, "No hay stock suficiente para este producto. Stock disponible: " + stockDisponible, "Stock insuficiente", javax.swing.JOptionPane.ERROR_MESSAGE);
                     return;
