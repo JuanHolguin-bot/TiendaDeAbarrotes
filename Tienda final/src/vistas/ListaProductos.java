@@ -25,6 +25,9 @@ public class ListaProductos extends javax.swing.JFrame {
     private IProductoManager productoManager;
     private IStockManager stockManager;
 
+    public ListaProductos() {
+    }
+
     public ListaProductos(IProductoManager productoManager, IStockManager stockManager, String usuario) {
         this.productoManager = productoManager;
         this.stockManager = stockManager;
@@ -54,7 +57,7 @@ public class ListaProductos extends javax.swing.JFrame {
                 producto.getNombre(),
                 producto.getTipoProducto(),
                 producto.getPrecio(),
-                stockManager.obtenerStock(producto),
+                stockManager.obtenerStock(producto.getIdProducto()),
                 producto.getProveedor(),
                 producto.getFechaVencimiento()
             });

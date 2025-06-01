@@ -11,14 +11,15 @@ public class Inventario {
     //Attributes 
     private IProductoManager productoManager;
     private IStockManager stockManager;
-    
+
     public Inventario(IProductoManager productoManager, IStockManager stockManager) {
         this.productoManager = productoManager;
         this.stockManager = stockManager;
     }
-    
+
     public void registrarProducto(Producto producto, int cantidadInicial) {
         productoManager.registrarProducto(producto);
-        stockManager.registrarStock(producto, cantidadInicial);
+        stockManager.registrarStock(producto.getIdProducto(), cantidadInicial);
     }
+
 }

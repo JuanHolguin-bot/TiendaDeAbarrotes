@@ -8,6 +8,8 @@ import Entities.Producto;
 import Repositorios.GestorStockRepositorio;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -16,46 +18,47 @@ import java.util.Map;
 public class GestorStock implements IStockManager {
 
     //Attributes
-    private static Map<Producto, Integer> stockProductos = new HashMap<>(); //producto, Cantidad
+    private static Map<Integer, Integer> stockProductos = new HashMap<>(); //idProducto, CantidadStock
     private final GestorStockRepositorio stockRepositorio = new GestorStockRepositorio();
-
-    public void sincronizarGuardarEnStockRepositorio() {
-        Map<Integer, Integer> stockPorId = new HashMap<>();
-        for (Map.Entry<Producto, Integer> entry : stockProductos.entrySet()) {
-            stockPorId.put(entry.getKey().getIdProducto(), entry.getValue());
-        }
-        stockRepositorio.guardarStockEnBD(stockPorId);
-    }
 
     //Methods 
     @Override
-    public void registrarStock(Producto producto, int cantidadInicial) {
-        stockProductos.put(producto, cantidadInicial);
-        sincronizarGuardarEnStockRepositorio();
+    public void registrarStock(int idProdcuto, int cantidadInicial) {
+        stockProductos.put(idProdcuto, cantidadInicial);
+        stockRepositorio.guardarStockEnBD(stockProductos);
     }
 
     @Override
-    public int obtenerStock(Producto producto) {
-        return stockProductos.getOrDefault(producto, 0);
-    }
-
-    @Override
-    public void actualizarStock(Producto producto, int cantidad) {
-        if (!stockProductos.containsKey(producto)) {
+    public void actualizarStock(int idProdcuto, int cantidad) {
+        if (!stockProductos.containsKey(idProdcuto)) {
             throw new IllegalArgumentException("El producto no está registrado en el inventario.");
         }
-
-        int cantidadActual = stockProductos.get(producto);
+        int cantidadActual = stockProductos.get(idProdcuto);
         if (cantidadActual < cantidad) {
-            throw new IllegalStateException("Stock insuficiente para el producto: " + producto.getNombre());
+            throw new IllegalStateException("Stock insuficiente para el producto con ");
         }
+        stockProductos.put(idProdcuto, cantidadActual - cantidad);
+        stockRepositorio.guardarStockEnBD(stockProductos);
+    }
 
-        stockProductos.put(producto, cantidadActual - cantidad);
+    @Override
+    public int obtenerStock(int idProdcuto) {
+        cargarStockDesdeRepositorio();
+        return stockProductos.getOrDefault(idProdcuto, 0);
+    }
+
+    @Override
+    public Map<Integer, Integer> cargarStockDesdeRepositorio() {
+        try {
+            stockProductos = stockRepositorio.cargarStockDesdeBD();
+        } catch (Exception ex) {
+            Logger.getLogger(GestorStock.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return stockProductos;
     }
 
     @Override
     public Map<Producto, Integer> productosStockBajo(int umbral) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
 }

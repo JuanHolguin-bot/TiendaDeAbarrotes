@@ -13,9 +13,10 @@ import java.util.Map;
  */
 public interface IStockManager {   //define las operaciones relacionadas con el stock
 
-    void registrarStock(Producto producto, int cantidadInicial);
-    int obtenerStock(Producto producto);
-    void actualizarStock(Producto producto, int cantidad);
+    void registrarStock(int idProducto, int cantidadInicial);
+    int obtenerStock(int idProducto);
+    void actualizarStock(int idProdcuto, int cantidad);
+    Map<Integer,Integer> cargarStockDesdeRepositorio();
     Map<Producto, Integer> productosStockBajo(int umbral);
     
 }
