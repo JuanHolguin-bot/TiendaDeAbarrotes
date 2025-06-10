@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.DocumentFilter;
 
 /**
  *
@@ -33,6 +35,32 @@ public class Login extends javax.swing.JFrame {
         initComponents();
         serviceLogin = new ServiceLogin();
 
+        // Filtro para no permitir espacios y limitar a 10 caracteres
+        ((AbstractDocument) txtUser.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
+                if (string == null) {
+                    return;
+                }
+                String newString = string.replaceAll("\\s+", ""); // Elimina los espacios en blanco
+                int newLength = fb.getDocument().getLength() + newString.length();
+                if (newLength <= 10) {
+                    super.insertString(fb, offset, newString, attr); // Inserta el texto sin espacios
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs) throws javax.swing.text.BadLocationException {
+                if (text == null) {
+                    return;
+                }
+                String newString = text.replaceAll("\\s+", "");
+                int newLength = fb.getDocument().getLength() - length + newString.length();
+                if (newLength <= 10) {
+                    super.replace(fb, offset, length, newString, attrs);
+                }
+            }
+        });
     }
 
     public RegistrarUsuario getRegistrarUsuario() {
@@ -174,16 +202,11 @@ public class Login extends javax.swing.JFrame {
                 boolean userValid = false;
                 try {
                     userValid = serviceLogin.ValidateUserAndPassword(username, password);
-
-                    if (!userValid) {
-                        JOptionPane.showMessageDialog(this, "Usuario y contraseña inválidos", "Login alert", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Error en el login: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Login alert", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-            
+
                 gestioninventario.Service.IProductoManager productoManager = new gestioninventario.Service.GestorProductos();
                 gestioninventario.Service.IStockManager stockManager = new gestioninventario.Service.GestorStock();
                 ListaProductos adminSet = new ListaProductos(productoManager, stockManager, username);
