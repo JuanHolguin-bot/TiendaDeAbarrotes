@@ -7,11 +7,11 @@
  */
 package vistas;
 
-import gestioninventario.Service.Inventario;
 import Entities.Producto;
 import Entities.ProductoAseo;
 import Entities.ProductoBebidas;
 import Entities.ProductoEnlatados;
+import gestioninventario.Service.Inventario;
 
 /**
  *
@@ -300,7 +300,8 @@ public class RegistrarProducto extends javax.swing.JFrame {
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         try {
             // Validar ID Producto (solo números)
-            if (!txtIdProducto.getText().matches("\\d+")) {
+            if (!txtIdProducto.getText().matches("\\d+"))// verifica si el ID contiene solo números y almenas un dígito
+            {
                 javax.swing.JOptionPane.showMessageDialog(this,
                         "El ID del producto debe contener solo números.",
                         "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -330,7 +331,9 @@ public class RegistrarProducto extends javax.swing.JFrame {
             }
 
             // Validar precio (solo números y decimales)
-            if (!txtPrecio.getText().matches("\\d*\\.?\\d+")) {
+            if (!txtPrecio.getText().matches("\\d*\\.?\\d+")) // verifica si el precio contiene solo números y decimales, 
+            // \\d* significa "cero o más dígitos" , \\.? significa "cero o un punto decimal", \\d+ significa "uno o más dígitos" 
+             {
                 javax.swing.JOptionPane.showMessageDialog(this,
                         "El precio debe ser un número válido.",
                         "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -340,7 +343,8 @@ public class RegistrarProducto extends javax.swing.JFrame {
             double precio = Double.parseDouble(txtPrecio.getText());
 
             // Validar cantidad (solo números enteros positivos)
-            if (!txtCantidad.getText().matches("\\d+")) {
+            if (!txtCantidad.getText().matches("\\d+")) // verifica si el ID contiene solo números y almenas un dígito
+             {
                 javax.swing.JOptionPane.showMessageDialog(this,
                         "La cantidad debe ser un número entero positivo.",
                         "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -361,7 +365,9 @@ public class RegistrarProducto extends javax.swing.JFrame {
 
             // Validar fecha (formato dd/mm/yyyy)
             String fechaVencimiento = txtCodigo3.getText().trim();
-            if (!fechaVencimiento.matches("\\d{2}/\\d{2}/\\d{4}")) {
+            if (!fechaVencimiento.matches("\\d{2}/\\d{2}/\\d{4}")) // verifica si la fecha tiene el formato dd/mm/yyyy
+            // \\d{2} indica exactamente dos dígitos, \\d{2} nuevamente representa dos dígitos para el mes, \\d{4} representa exactamente cuatro dígitos para el año. 
+            {
                 javax.swing.JOptionPane.showMessageDialog(this,
                         "La fecha debe tener el formato dd/mm/yyyy",
                         "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
