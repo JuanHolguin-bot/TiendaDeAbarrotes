@@ -45,7 +45,12 @@ public class Login extends javax.swing.JFrame {
                 String newString = string.replaceAll("\\s+", ""); // Elimina los espacios en blanco
                 int newLength = fb.getDocument().getLength() + newString.length();
                 if (newLength <= 10) {
-                    super.insertString(fb, offset, newString, attr); // Inserta el texto sin espacios
+                    super.insertString(fb, offset, newString, attr);
+                    if (newLength == 10) {
+                        javax.swing.JOptionPane.showMessageDialog(null, "El máximo permitido son 10 caracteres.", "Advertencia", javax.swing.JOptionPane.WARNING_MESSAGE);
+                    }
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(null, "El máximo permitido son 10 caracteres.", "Advertencia", javax.swing.JOptionPane.WARNING_MESSAGE);
                 }
             }
 
@@ -58,6 +63,11 @@ public class Login extends javax.swing.JFrame {
                 int newLength = fb.getDocument().getLength() - length + newString.length();
                 if (newLength <= 10) {
                     super.replace(fb, offset, length, newString, attrs);
+                    if (newLength == 10) {
+                        javax.swing.JOptionPane.showMessageDialog(null, "El máximo permitido son 10 caracteres.", "Advertencia", javax.swing.JOptionPane.WARNING_MESSAGE);
+                    }
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(null, "El máximo permitido son 10 caracteres.", "Advertencia", javax.swing.JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
