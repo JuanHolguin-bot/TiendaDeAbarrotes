@@ -9,6 +9,10 @@ import Entities.Venta;
 import gestioninventario.Service.GestorVenta;
 import gestioninventario.Service.IProductoManager;
 import gestioninventario.Service.IStockManager;
+import Repositorios.GestorFactura;
+import org.bson.Document;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -88,7 +92,7 @@ public class Ventas extends javax.swing.JFrame {
         label = new javax.swing.JLabel();
         txtTotalPagar = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -499,13 +503,41 @@ public class Ventas extends javax.swing.JFrame {
             frame.setLocationRelativeTo(this);
             frame.setVisible(true);
 
-
             this.dispose();
 
         } catch (Exception e) {
             javax.swing.JOptionPane.showMessageDialog(this, "Ocurrió un error al generar la venta: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
 
+        // Crear instancia de GestorFactura
+        GestorFactura gestorFactura = new GestorFactura();
+
+        // Generar número de factura
+        String numeroFactura = gestorFactura.generarSiguienteNumeroFactura();
+
+        // Armar la lista de productos desde jTable1
+        List<Document> productos = new ArrayList<>();
+        double totalVenta = 0.0;
+        for (int i = 0; i < jTable1.getRowCount(); i++) {
+            int idProducto = Integer.parseInt(jTable1.getValueAt(i, 0).toString());
+            String nombreProducto = jTable1.getValueAt(i, 1).toString();
+            double precio = Double.parseDouble(jTable1.getValueAt(i, 2).toString());
+            int cantidad = Integer.parseInt(jTable1.getValueAt(i, 3).toString());
+            double descuento = Double.parseDouble(jTable1.getValueAt(i, 4).toString());
+            double total = Double.parseDouble(jTable1.getValueAt(i, 5).toString());
+
+            Document prod = new Document("idProducto", idProducto)
+                    .append("producto", nombreProducto)
+                    .append("precio", precio)
+                    .append("cantidad", cantidad)
+                    .append("descuento", descuento)
+                    .append("total", total);
+            productos.add(prod);
+            totalVenta += total;
+        }
+
+        // Guardar la factura en MongoDB
+        gestorFactura.guardarFactura(numeroFactura, txtCliente.getText(), productos, totalVenta);
     }//GEN-LAST:event_btnGenerarVentaActionPerformed
 
     private void txtPrecioVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioVentaActionPerformed
