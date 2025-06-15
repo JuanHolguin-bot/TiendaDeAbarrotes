@@ -13,7 +13,9 @@ import javax.swing.event.DocumentEvent;
 import Repositorios.GestorFactura;
 import org.bson.Document;
 import java.util.List;
-
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import javax.swing.ButtonGroup;
 /**
  *
  * @author jose_
@@ -72,6 +74,14 @@ public class Facturas extends javax.swing.JFrame {
         rowSorter = new TableRowSorter<>(modeloTabla);
         jtFactura.setRowSorter(rowSorter);
 
+        // Agregar listeners para los radio buttons
+        ActionListener radioListener = e -> filtrarTabla();
+        rbMayorCero1.addActionListener(radioListener);
+        rbHastaUnMillon.addActionListener(radioListener);
+        rbHastaDiezMillones.addActionListener(radioListener);
+        rbMayorDiezMillones.addActionListener(radioListener);
+        rbMayorDiezMillones.addActionListener(radioListener);
+
         txtFiltro1.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -87,26 +97,69 @@ public class Facturas extends javax.swing.JFrame {
             public void changedUpdate(DocumentEvent e) {
                 filtrarTabla();
             }
+        });
+    }
 
-            private void filtrarTabla() {
-                String texto = txtFiltro1.getText();
-                String columnaSeleccionada = (String) cboFiltro1.getSelectedItem();
-                int columnaIndice = 0;
+    private void filtrarTabla() {
+        String texto = txtFiltro1.getText();
+        String columnaSeleccionada = (String) cboFiltro1.getSelectedItem();
 
-                switch (columnaSeleccionada) {
-                    case "Numero Factura" ->
-                        columnaIndice = 0;
-                    case "Cliente" ->
-                        columnaIndice = 1;
-                }
+        // Crear filtros combinados
+        List<RowFilter<DefaultTableModel, Object>> filters = new java.util.ArrayList<>();
 
-                if (texto.trim().length() == 0) {
-                    rowSorter.setRowFilter(null);
-                } else {
-                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + texto, columnaIndice));
+        // Filtro por texto
+        if (!texto.trim().isEmpty()) {
+            int columnaIndice = switch (columnaSeleccionada) {
+                case "Numero Factura" ->
+                    0;
+                case "Cliente" ->
+                    1;
+                default ->
+                    0;
+            };
+            filters.add(RowFilter.regexFilter("(?i)" + texto, columnaIndice));
+        }
+
+        // Filtro por rango de precios
+        RowFilter<DefaultTableModel, Object> precioFilter = crearFiltroPrecio();
+        if (precioFilter != null) {
+            filters.add(precioFilter);
+        }
+
+        // Aplicar filtros
+        if (filters.isEmpty()) {
+            rowSorter.setRowFilter(null);
+        } else if (filters.size() == 1) {
+            rowSorter.setRowFilter(filters.get(0));
+        } else {
+            rowSorter.setRowFilter(RowFilter.andFilter(filters));
+        }
+    }
+
+    private RowFilter<DefaultTableModel, Object> crearFiltroPrecio() {
+        return new RowFilter<DefaultTableModel, Object>() {
+            @Override
+            public boolean include(Entry<? extends DefaultTableModel, ? extends Object> entry) {
+                try {
+                    // Obtener el valor de la columna "Total Venta" (índice 2)
+                    double totalVenta = Double.parseDouble(entry.getValue(2).toString());
+
+                    if (rbMayorCero1.isSelected()) {
+                        return totalVenta > 0;
+                    } else if (rbHastaUnMillon.isSelected()) {
+                        return totalVenta > 100_000 && totalVenta <= 1_000_000;
+                    } else if (rbHastaDiezMillones.isSelected()) {
+                        return totalVenta > 1_000_000 && totalVenta <= 10_000_000;
+                    } else if (rbMayorDiezMillones.isSelected()) {
+                        return totalVenta > 10_000_000;
+                    }
+
+                    return true; // Si ningún radio button está seleccionado
+                } catch (NumberFormatException e) {
+                    return false;
                 }
             }
-        });
+        };
     }
 
     /**
@@ -140,11 +193,10 @@ public class Facturas extends javax.swing.JFrame {
         cboFiltro1 = new javax.swing.JComboBox<>();
         txtFiltro1 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        rbMenorIgualDiezMillones = new javax.swing.JRadioButton();
-        rbMenorIgualUnMillon = new javax.swing.JRadioButton();
         rbMayorDiezMillones = new javax.swing.JRadioButton();
+        rbHastaDiezMillones = new javax.swing.JRadioButton();
         rbMayorCero1 = new javax.swing.JRadioButton();
-        rbMenorIgualCienMil2 = new javax.swing.JRadioButton();
+        rbHastaUnMillon = new javax.swing.JRadioButton();
         jPanel14 = new javax.swing.JPanel();
         jPanel15 = new javax.swing.JPanel();
         btnQuitarFiltros5 = new javax.swing.JButton();
@@ -287,14 +339,16 @@ public class Facturas extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("Precio");
 
-        btnGroupFiltro.add(rbMenorIgualDiezMillones);
-        rbMenorIgualDiezMillones.setText("Menor o igual a 10.000.000");
-
-        btnGroupFiltro.add(rbMenorIgualUnMillon);
-        rbMenorIgualUnMillon.setText("Menor o igual a 1.000.000");
-
         btnGroupFiltro.add(rbMayorDiezMillones);
         rbMayorDiezMillones.setText("Mayor a 10.000.000");
+        rbMayorDiezMillones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbMayorDiezMillonesActionPerformed(evt);
+            }
+        });
+
+        btnGroupFiltro.add(rbHastaDiezMillones);
+        rbHastaDiezMillones.setText("Entre 1.000.000 - 10.000.000");
 
         btnGroupFiltro.add(rbMayorCero1);
         rbMayorCero1.setText("Mayor a 0");
@@ -304,11 +358,11 @@ public class Facturas extends javax.swing.JFrame {
             }
         });
 
-        btnGroupFiltro.add(rbMenorIgualCienMil2);
-        rbMenorIgualCienMil2.setText("Menor o igual a 100.000");
-        rbMenorIgualCienMil2.addActionListener(new java.awt.event.ActionListener() {
+        btnGroupFiltro.add(rbHastaUnMillon);
+        rbHastaUnMillon.setText("Entre 100.000 - 1.000.000");
+        rbHastaUnMillon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbMenorIgualCienMil2ActionPerformed(evt);
+                rbHastaUnMillonActionPerformed(evt);
             }
         });
 
@@ -322,11 +376,10 @@ public class Facturas extends javax.swing.JFrame {
                     .addComponent(txtFiltro1)
                     .addComponent(cboFiltro1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rbMenorIgualDiezMillones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rbMenorIgualUnMillon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(rbMayorDiezMillones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rbHastaDiezMillones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(rbMayorCero1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rbMenorIgualCienMil2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(rbHastaUnMillon, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -341,14 +394,12 @@ public class Facturas extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rbMayorCero1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rbMenorIgualCienMil2)
+                .addComponent(rbHastaUnMillon)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rbMenorIgualUnMillon, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rbMenorIgualDiezMillones)
+                .addComponent(rbHastaDiezMillones, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rbMayorDiezMillones)
-                .addContainerGap(398, Short.MAX_VALUE))
+                .addContainerGap(425, Short.MAX_VALUE))
         );
 
         jPanel14.setBackground(new java.awt.Color(255, 255, 255));
@@ -443,7 +494,7 @@ public class Facturas extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(981, Short.MAX_VALUE))
+                .addContainerGap(978, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                     .addContainerGap(190, Short.MAX_VALUE)
@@ -483,11 +534,24 @@ public class Facturas extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConsultar1ActionPerformed
 
     private void btnQuitarFiltros5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarFiltros5ActionPerformed
+        // Deseleccionar todos los radio buttons
+        ButtonGroup grupoBotones = new ButtonGroup();
+        grupoBotones.add(rbMayorCero1);
+        grupoBotones.add(rbHastaUnMillon);
+        grupoBotones.add(rbHastaDiezMillones);
+        grupoBotones.add(rbMayorDiezMillones);
+        grupoBotones.add(rbMayorDiezMillones);
+        grupoBotones.clearSelection();
 
+        // Limpiar el filtro de texto
+        txtFiltro1.setText("");
+
+        // Actualizar la tabla
+        filtrarTabla();
     }//GEN-LAST:event_btnQuitarFiltros5ActionPerformed
 
     private void btnSalir5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalir5ActionPerformed
-
+        this.dispose();
     }//GEN-LAST:event_btnSalir5ActionPerformed
 
     private void cboFiltro1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFiltro1ActionPerformed
@@ -498,9 +562,13 @@ public class Facturas extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_rbMayorCero1ActionPerformed
 
-    private void rbMenorIgualCienMil2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbMenorIgualCienMil2ActionPerformed
+    private void rbHastaUnMillonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbHastaUnMillonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_rbMenorIgualCienMil2ActionPerformed
+    }//GEN-LAST:event_rbHastaUnMillonActionPerformed
+
+    private void rbMayorDiezMillonesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbMayorDiezMillonesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbMayorDiezMillonesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -560,16 +628,15 @@ public class Facturas extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jtFactura;
+    private javax.swing.JRadioButton rbHastaDiezMillones;
+    private javax.swing.JRadioButton rbHastaUnMillon;
     private javax.swing.JRadioButton rbMayorCero1;
     private javax.swing.JRadioButton rbMayorDiezMillones;
     private javax.swing.JRadioButton rbMayorIgualCero;
     private javax.swing.JRadioButton rbMayorMil;
     private javax.swing.JRadioButton rbMenorIgualCien;
-    private javax.swing.JRadioButton rbMenorIgualCienMil2;
-    private javax.swing.JRadioButton rbMenorIgualDiezMillones;
     private javax.swing.JRadioButton rbMenorIgualMil;
     private javax.swing.JRadioButton rbMenorIgualQuinientos;
-    private javax.swing.JRadioButton rbMenorIgualUnMillon;
     private javax.swing.JTextField txtFiltro;
     private javax.swing.JTextField txtFiltro1;
     // End of variables declaration//GEN-END:variables
