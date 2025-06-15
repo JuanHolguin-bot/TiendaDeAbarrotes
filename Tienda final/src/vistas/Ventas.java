@@ -517,7 +517,10 @@ public class Ventas extends javax.swing.JFrame {
         String numeroFactura = gestorFactura.generarSiguienteNumeroFactura();
 
         // obtener info desde la clase Venta
-        List<Producto> productosVenta = venta.listaProductosVenta();
+        List<Producto> productosVenta_ = venta.listaProductosVenta();
+        List<Document> productosVenta = gestorFactura.productosToDocumentos(productosVenta_);
+        
+        
         String cliente =  venta.getCliente();
         double precioVenta = venta.getMonto();
         String vendedor = venta.getVendedor();
