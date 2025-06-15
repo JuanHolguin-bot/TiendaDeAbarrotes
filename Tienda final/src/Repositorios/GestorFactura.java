@@ -1,5 +1,6 @@
 package Repositorios;
 
+import Entities.Producto;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -39,12 +40,13 @@ public class GestorFactura {
     }
 
     // Guarda una factura completa (una venta con todos sus productos)
-    public void guardarFactura(String numeroFactura, String cliente, List<Document> productos, double totalVenta) {
+    public void guardarFactura(String numeroFactura, String cliente, List<Producto> productos, double totalVenta, String vendedor) {
         Document factura = new Document("numeroFactura", numeroFactura)
                 .append("cliente", cliente)
                 .append("productos", productos)
                 .append("totalVenta", totalVenta)
-                .append("fecha", java.time.LocalDateTime.now().toString());
+                .append("fecha", java.time.LocalDateTime.now().toString())
+                .append("Vendedor", vendedor);
         ventasCollection.insertOne(factura);
     }
 

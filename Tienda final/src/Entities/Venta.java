@@ -13,11 +13,15 @@ public class Venta {
     private String cliente;
     private Date fecha;
     private double monto; // Atributo para almacenar el monto total de la venta
-    private Usuario vendedor;
+    private String vendedor;
 
     public void agregarProducto(Producto producto, int cantidad, double descuento) {
         productos.put(producto, cantidad);
         descuentos.put(producto, descuento);
+    }
+
+    public List<Producto> listaProductosVenta() {
+        return new ArrayList<>(productos.keySet());
     }
 
     public Map<Producto, Integer> getProductos() {
@@ -53,11 +57,11 @@ public class Venta {
         this.monto = monto;
     }
 
-    public Usuario getVendedor() {
+    public String getVendedor() {
         return vendedor;
     }
 
-    public void setVendedor(Usuario vendedor) {
+    public void setVendedor(String vendedor) {
         this.vendedor = vendedor;
     }
 }
