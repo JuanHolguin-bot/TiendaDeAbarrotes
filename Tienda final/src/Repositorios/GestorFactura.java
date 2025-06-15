@@ -1,6 +1,5 @@
 package Repositorios;
 
-
 import Entities.Producto;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -63,19 +62,24 @@ public class GestorFactura {
         }
         return facturasEnBd;
     }
-    
+
     public List<Document> productosToDocumentos(List<Producto> productos) {
-    List<Document> documentos = new ArrayList<>();
-    for (Producto producto : productos) {
-        Document doc = new Document("idProducto", producto.getIdProducto())
-            .append("nombre", producto.getNombre())
-            .append("tipo producto", producto.getTipoProducto())
-            .append("proveedor", producto.getProveedor())
-            .append("fecha vencimiento", producto.getFechaVencimiento())
-            .append("precio", producto.getPrecio());
-        // Agrega aquí otros campos si tu clase Producto los tiene
-        documentos.add(doc);
+        List<Document> documentos = new ArrayList<>();
+        for (Producto producto : productos) {
+            Document doc = new Document("idProducto", producto.getIdProducto())
+                    .append("nombre", producto.getNombre())
+                    .append("tipo producto", producto.getTipoProducto())
+                    .append("proveedor", producto.getProveedor())
+                    .append("fecha vencimiento", producto.getFechaVencimiento())
+                    .append("precio", producto.getPrecio());
+                    
+            // Agrega aquí otros campos si tu clase Producto los tiene
+            documentos.add(doc);
+        }
+        return documentos;
     }
-    return documentos;
-}
+
+    public Document obtenerFacturaPorNumero(String numeroFactura) {
+        return ventasCollection.find(new Document("numeroFactura", numeroFactura)).first();
+    }
 }
