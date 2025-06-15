@@ -4,17 +4,109 @@
  */
 package vistas;
 
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import javax.swing.RowFilter;
+import javax.swing.JOptionPane;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
+import Repositorios.GestorFactura;
+import org.bson.Document;
+import java.util.List;
+
 /**
  *
  * @author jose_
  */
 public class Facturas extends javax.swing.JFrame {
 
+    private DefaultTableModel modeloTabla;
+    private TableRowSorter<DefaultTableModel> rowSorter;
+    private GestorFactura gestorFactura;
+
     /**
      * Creates new form Facturas
      */
     public Facturas() {
         initComponents();
+        gestorFactura = new GestorFactura();
+        configurarTabla();
+        cargarFacturasEnTabla();
+        configurarFiltro();
+    }
+
+    private void configurarTabla() {
+        modeloTabla = new DefaultTableModel(
+                new String[]{"N° Factura", "Cliente", "Total Venta", "Fecha"}, 0
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Hace que la tabla no sea editable
+            }
+        };
+        jtFactura.setModel(modeloTabla);
+    }
+
+    private void cargarFacturasEnTabla() {
+        modeloTabla.setRowCount(0); // Limpiar la tabla
+
+        try {
+            List<Document> facturas = gestorFactura.cargarFacturasDesdeBd();
+            for (Document factura : facturas) {
+                modeloTabla.addRow(new Object[]{
+                    factura.getString("numeroFactura"),
+                    factura.getString("cliente"),
+                    factura.getDouble("totalVenta"),
+                    factura.getString("fecha")
+                });
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al cargar las facturas: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void configurarFiltro() {
+        rowSorter = new TableRowSorter<>(modeloTabla);
+        jtFactura.setRowSorter(rowSorter);
+
+        txtFiltro1.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filtrarTabla();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filtrarTabla();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                filtrarTabla();
+            }
+
+            private void filtrarTabla() {
+                String texto = txtFiltro1.getText();
+                String columnaSeleccionada = (String) cboFiltro1.getSelectedItem();
+                int columnaIndice = 0;
+
+                switch (columnaSeleccionada) {
+                    case "Numero Factura" ->
+                        columnaIndice = 0;
+                    case "Cliente" ->
+                        columnaIndice = 1;
+                }
+
+                if (texto.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + texto, columnaIndice));
+                }
+            }
+        });
     }
 
     /**
@@ -43,23 +135,23 @@ public class Facturas extends javax.swing.JFrame {
         rbMenorIgualQuinientos = new javax.swing.JRadioButton();
         rbMayorMil = new javax.swing.JRadioButton();
         btnConsultar = new javax.swing.JButton();
+        btnGroupFiltro = new javax.swing.ButtonGroup();
         jPanel4 = new javax.swing.JPanel();
         cboFiltro1 = new javax.swing.JComboBox<>();
         txtFiltro1 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        rbMayorIgualCero1 = new javax.swing.JRadioButton();
-        rbMenorIgualCien1 = new javax.swing.JRadioButton();
-        rbMenorIgualMil1 = new javax.swing.JRadioButton();
-        rbMenorIgualQuinientos1 = new javax.swing.JRadioButton();
-        rbMayorMil1 = new javax.swing.JRadioButton();
-        btnConsultar1 = new javax.swing.JButton();
+        rbMenorIgualDiezMillones = new javax.swing.JRadioButton();
+        rbMenorIgualUnMillon = new javax.swing.JRadioButton();
+        rbMayorDiezMillones = new javax.swing.JRadioButton();
+        rbMayorCero1 = new javax.swing.JRadioButton();
+        rbMenorIgualCienMil2 = new javax.swing.JRadioButton();
         jPanel14 = new javax.swing.JPanel();
         jPanel15 = new javax.swing.JPanel();
         btnQuitarFiltros5 = new javax.swing.JButton();
         btnSalir5 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jtProductos = new javax.swing.JTable();
+        jtFactura = new javax.swing.JTable();
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -195,20 +287,28 @@ public class Facturas extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("Precio");
 
-        rbMayorIgualCero1.setText("Mayor o igual a 0");
+        btnGroupFiltro.add(rbMenorIgualDiezMillones);
+        rbMenorIgualDiezMillones.setText("Menor o igual a 10.000.000");
 
-        rbMenorIgualCien1.setText("Menor o igual a 100");
+        btnGroupFiltro.add(rbMenorIgualUnMillon);
+        rbMenorIgualUnMillon.setText("Menor o igual a 1.000.000");
 
-        rbMenorIgualMil1.setText("Menor o igual a 1000");
+        btnGroupFiltro.add(rbMayorDiezMillones);
+        rbMayorDiezMillones.setText("Mayor a 10.000.000");
 
-        rbMenorIgualQuinientos1.setText("Menor o igual a 500");
-
-        rbMayorMil1.setText("Mayor a 1000");
-
-        btnConsultar1.setText("Consultar");
-        btnConsultar1.addActionListener(new java.awt.event.ActionListener() {
+        btnGroupFiltro.add(rbMayorCero1);
+        rbMayorCero1.setText("Mayor a 0");
+        rbMayorCero1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnConsultar1ActionPerformed(evt);
+                rbMayorCero1ActionPerformed(evt);
+            }
+        });
+
+        btnGroupFiltro.add(rbMenorIgualCienMil2);
+        rbMenorIgualCienMil2.setText("Menor o igual a 100.000");
+        rbMenorIgualCienMil2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbMenorIgualCienMil2ActionPerformed(evt);
             }
         });
 
@@ -219,15 +319,14 @@ public class Facturas extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnConsultar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtFiltro1)
                     .addComponent(cboFiltro1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rbMayorIgualCero1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rbMenorIgualCien1, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
-                    .addComponent(rbMenorIgualMil1, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
-                    .addComponent(rbMenorIgualQuinientos1, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
-                    .addComponent(rbMayorMil1, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE))
+                    .addComponent(rbMenorIgualDiezMillones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rbMenorIgualUnMillon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rbMayorDiezMillones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rbMayorCero1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rbMenorIgualCienMil2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -240,18 +339,16 @@ public class Facturas extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rbMayorIgualCero1)
+                .addComponent(rbMayorCero1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rbMenorIgualCien1)
+                .addComponent(rbMenorIgualCienMil2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rbMenorIgualQuinientos1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(rbMenorIgualUnMillon, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rbMenorIgualMil1)
+                .addComponent(rbMenorIgualDiezMillones)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rbMayorMil1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 356, Short.MAX_VALUE)
-                .addComponent(btnConsultar1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(rbMayorDiezMillones)
+                .addContainerGap(398, Short.MAX_VALUE))
         );
 
         jPanel14.setBackground(new java.awt.Color(255, 255, 255));
@@ -302,7 +399,7 @@ public class Facturas extends javax.swing.JFrame {
         jLabel1.setText("FACTURAS");
         jLabel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jtProductos.setModel(new javax.swing.table.DefaultTableModel(
+        jtFactura.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -313,7 +410,7 @@ public class Facturas extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jtProductos);
+        jScrollPane1.setViewportView(jtFactura);
 
         javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
         jPanel14.setLayout(jPanel14Layout);
@@ -346,7 +443,7 @@ public class Facturas extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(985, Short.MAX_VALUE))
+                .addContainerGap(981, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                     .addContainerGap(190, Short.MAX_VALUE)
@@ -374,8 +471,7 @@ public class Facturas extends javax.swing.JFrame {
     }//GEN-LAST:event_txtFiltroActionPerformed
 
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
-       
-        
+
     }//GEN-LAST:event_btnConsultarActionPerformed
 
     private void txtFiltro1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFiltro1ActionPerformed
@@ -383,21 +479,28 @@ public class Facturas extends javax.swing.JFrame {
     }//GEN-LAST:event_txtFiltro1ActionPerformed
 
     private void btnConsultar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultar1ActionPerformed
-       
 
     }//GEN-LAST:event_btnConsultar1ActionPerformed
 
     private void btnQuitarFiltros5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarFiltros5ActionPerformed
- 
+
     }//GEN-LAST:event_btnQuitarFiltros5ActionPerformed
 
     private void btnSalir5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalir5ActionPerformed
-      
+
     }//GEN-LAST:event_btnSalir5ActionPerformed
 
     private void cboFiltro1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFiltro1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cboFiltro1ActionPerformed
+
+    private void rbMayorCero1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbMayorCero1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbMayorCero1ActionPerformed
+
+    private void rbMenorIgualCienMil2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbMenorIgualCienMil2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbMenorIgualCienMil2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -436,23 +539,8 @@ public class Facturas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConsultar;
-    private javax.swing.JButton btnConsultar1;
-    private javax.swing.JButton btnNuevo;
-    private javax.swing.JButton btnNuevo1;
-    private javax.swing.JButton btnNuevo2;
-    private javax.swing.JButton btnNuevo3;
-    private javax.swing.JButton btnNuevo4;
-    private javax.swing.JButton btnQuitarFiltros;
-    private javax.swing.JButton btnQuitarFiltros1;
-    private javax.swing.JButton btnQuitarFiltros2;
-    private javax.swing.JButton btnQuitarFiltros3;
-    private javax.swing.JButton btnQuitarFiltros4;
+    private javax.swing.ButtonGroup btnGroupFiltro;
     private javax.swing.JButton btnQuitarFiltros5;
-    private javax.swing.JButton btnSalir;
-    private javax.swing.JButton btnSalir1;
-    private javax.swing.JButton btnSalir2;
-    private javax.swing.JButton btnSalir3;
-    private javax.swing.JButton btnSalir4;
     private javax.swing.JButton btnSalir5;
     private javax.swing.JComboBox<String> cboFiltro;
     private javax.swing.JComboBox<String> cboFiltro1;
@@ -466,32 +554,22 @@ public class Facturas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel15;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jtProductos;
+    private javax.swing.JTable jtFactura;
+    private javax.swing.JRadioButton rbMayorCero1;
+    private javax.swing.JRadioButton rbMayorDiezMillones;
     private javax.swing.JRadioButton rbMayorIgualCero;
-    private javax.swing.JRadioButton rbMayorIgualCero1;
     private javax.swing.JRadioButton rbMayorMil;
-    private javax.swing.JRadioButton rbMayorMil1;
     private javax.swing.JRadioButton rbMenorIgualCien;
-    private javax.swing.JRadioButton rbMenorIgualCien1;
+    private javax.swing.JRadioButton rbMenorIgualCienMil2;
+    private javax.swing.JRadioButton rbMenorIgualDiezMillones;
     private javax.swing.JRadioButton rbMenorIgualMil;
-    private javax.swing.JRadioButton rbMenorIgualMil1;
     private javax.swing.JRadioButton rbMenorIgualQuinientos;
-    private javax.swing.JRadioButton rbMenorIgualQuinientos1;
+    private javax.swing.JRadioButton rbMenorIgualUnMillon;
     private javax.swing.JTextField txtFiltro;
     private javax.swing.JTextField txtFiltro1;
     // End of variables declaration//GEN-END:variables

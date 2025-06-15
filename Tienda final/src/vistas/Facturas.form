@@ -189,6 +189,8 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.ButtonGroup" name="btnGroupFiltro">
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
@@ -215,7 +217,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="985" max="32767" attributes="0"/>
+              <EmptySpace pref="981" max="32767" attributes="0"/>
           </Group>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
@@ -259,18 +261,17 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="btnConsultar1" max="32767" attributes="0"/>
                       <Component id="txtFiltro1" alignment="0" max="32767" attributes="0"/>
                       <Component id="cboFiltro1" alignment="0" max="32767" attributes="0"/>
                       <Component id="jLabel6" alignment="0" max="32767" attributes="0"/>
-                      <Component id="rbMayorIgualCero1" alignment="0" max="32767" attributes="0"/>
-                      <Component id="rbMenorIgualCien1" alignment="0" pref="159" max="32767" attributes="0"/>
-                      <Component id="rbMenorIgualMil1" alignment="0" pref="159" max="32767" attributes="0"/>
-                      <Component id="rbMenorIgualQuinientos1" alignment="0" pref="159" max="32767" attributes="0"/>
-                      <Component id="rbMayorMil1" alignment="0" pref="159" max="32767" attributes="0"/>
+                      <Component id="rbMenorIgualDiezMillones" alignment="0" max="32767" attributes="0"/>
+                      <Component id="rbMenorIgualUnMillon" alignment="0" max="32767" attributes="0"/>
+                      <Component id="rbMayorDiezMillones" alignment="0" max="32767" attributes="0"/>
+                      <Component id="rbMayorCero1" alignment="0" max="32767" attributes="0"/>
+                      <Component id="rbMenorIgualCienMil2" alignment="1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -286,18 +287,16 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="rbMayorIgualCero1" min="-2" max="-2" attributes="0"/>
+                  <Component id="rbMayorCero1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="rbMenorIgualCien1" min="-2" max="-2" attributes="0"/>
+                  <Component id="rbMenorIgualCienMil2" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="rbMenorIgualQuinientos1" min="-2" pref="21" max="-2" attributes="0"/>
+                  <Component id="rbMenorIgualUnMillon" min="-2" pref="21" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="rbMenorIgualMil1" min="-2" max="-2" attributes="0"/>
+                  <Component id="rbMenorIgualDiezMillones" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="rbMayorMil1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="356" max="32767" attributes="0"/>
-                  <Component id="btnConsultar1" min="-2" pref="36" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="rbMayorDiezMillones" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="398" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -333,37 +332,50 @@
             <Property name="text" type="java.lang.String" value="Precio"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JRadioButton" name="rbMayorIgualCero1">
+        <Component class="javax.swing.JRadioButton" name="rbMenorIgualDiezMillones">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Mayor o igual a 0"/>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="btnGroupFiltro"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Menor o igual a 10.000.000"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JRadioButton" name="rbMenorIgualCien1">
+        <Component class="javax.swing.JRadioButton" name="rbMenorIgualUnMillon">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Menor o igual a 100"/>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="btnGroupFiltro"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Menor o igual a 1.000.000"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JRadioButton" name="rbMenorIgualMil1">
+        <Component class="javax.swing.JRadioButton" name="rbMayorDiezMillones">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Menor o igual a 1000"/>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="btnGroupFiltro"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Mayor a 10.000.000"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JRadioButton" name="rbMenorIgualQuinientos1">
+        <Component class="javax.swing.JRadioButton" name="rbMayorCero1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Menor o igual a 500"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="rbMayorMil1">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Mayor a 1000"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnConsultar1">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Consultar"/>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="btnGroupFiltro"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Mayor a 0"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnConsultar1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbMayorCero1ActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="rbMenorIgualCienMil2">
+          <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="btnGroupFiltro"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Menor o igual a 100.000"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbMenorIgualCienMil2ActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
@@ -496,7 +508,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTable" name="jtProductos">
+            <Component class="javax.swing.JTable" name="jtFactura">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="4" rowCount="4">
