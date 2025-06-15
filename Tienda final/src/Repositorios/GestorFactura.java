@@ -1,5 +1,7 @@
 package Repositorios;
 
+
+import Entities.Producto;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -39,12 +41,13 @@ public class GestorFactura {
     }
 
     // Guarda una factura completa (una venta con todos sus productos)
-    public void guardarFactura(String numeroFactura, String cliente, List<Document> productos, double totalVenta) {
+    public void guardarFactura(String numeroFactura, String cliente, List<Document> productos, double totalVenta, String vendedor) {
         Document factura = new Document("numeroFactura", numeroFactura)
                 .append("cliente", cliente)
                 .append("productos", productos)
                 .append("totalVenta", totalVenta)
-                .append("fecha", java.time.LocalDateTime.now().toString());
+                .append("fecha", java.time.LocalDateTime.now().toString())
+                .append("Vendedor", vendedor);
         ventasCollection.insertOne(factura);
     }
 
@@ -60,4 +63,19 @@ public class GestorFactura {
         }
         return facturasEnBd;
     }
+    
+    public List<Document> productosToDocumentos(List<Producto> productos) {
+    List<Document> documentos = new ArrayList<>();
+    for (Producto producto : productos) {
+        Document doc = new Document("idProducto", producto.getIdProducto())
+            .append("nombre", producto.getNombre())
+            .append("tipo producto", producto.getTipoProducto())
+            .append("proveedor", producto.getProveedor())
+            .append("fecha vencimiento", producto.getFechaVencimiento())
+            .append("precio", producto.getPrecio());
+        // Agrega aquí otros campos si tu clase Producto los tiene
+        documentos.add(doc);
+    }
+    return documentos;
+}
 }
