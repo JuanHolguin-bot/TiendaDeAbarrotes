@@ -13,6 +13,7 @@ import Repositorios.GestorFactura;
 import org.bson.Document;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -517,8 +518,9 @@ public class Ventas extends javax.swing.JFrame {
         String numeroFactura = gestorFactura.generarSiguienteNumeroFactura();
 
         // obtener info desde la clase Venta
-        List<Producto> productosVenta_ = venta.listaProductosVenta();
-        List<Document> productosVenta = gestorFactura.productosToDocumentos(productosVenta_);
+        Map<Producto, Integer>  productosVenta_ = venta.getProductos();
+        double descuento = venta.getDescuento();
+        List<Document> productosVenta = gestorFactura.productosToDocumentos(productosVenta_,descuento);
         
         
         String cliente =  venta.getCliente();

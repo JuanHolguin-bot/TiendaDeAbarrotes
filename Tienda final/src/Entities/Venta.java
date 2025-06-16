@@ -9,7 +9,7 @@ import java.util.*;
 public class Venta {
 
     private final Map<Producto, Integer> productos = new HashMap<>(); // Almacena los productos a vender
-    private final Map<Producto, Double> descuentos = new HashMap<>(); // Nuevo HashMap para descuentos 
+    private double descuento; // Nuevo HashMap para descuentos 
     private String cliente;
     private Date fecha;
     private double monto; // Atributo para almacenar el monto total de la venta
@@ -17,19 +17,16 @@ public class Venta {
 
     public void agregarProducto(Producto producto, int cantidad, double descuento) {
         productos.put(producto, cantidad);
-        descuentos.put(producto, descuento);
+        this.descuento = descuento; 
     }
 
-    public List<Producto> listaProductosVenta() {
-        return new ArrayList<>(productos.keySet());
-    }
 
     public Map<Producto, Integer> getProductos() {
         return productos;
     }
 
-    public double getDescuento(Producto producto) {
-        return descuentos.getOrDefault(producto, 0.0); // Obtener el descuento o 0 si no existe
+    public double getDescuento(){
+        return descuento; // 
     }
 
     // Getters y setters para cliente, fecha, monto, vendedor...
