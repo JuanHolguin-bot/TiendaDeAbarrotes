@@ -16,9 +16,9 @@ import java.util.List;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.ButtonGroup;
+import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.JFrame;
 
 /**
  *
@@ -224,9 +224,11 @@ public class Facturas extends javax.swing.JFrame {
                         producto.getDouble("precio"),
                         producto.getInteger("cantidad"),
                         producto.getDouble("descuento"),
-                        producto.getDouble("totalVenta")
+                        producto.getDouble("Total producto")
                     });
                 }
+                // Agrega una fila vacía o separadora si quieres
+                modeloColilla.addRow(new Object[]{"", "", "", "", "TOTAL VENTA:", factura.getDouble("totalVenta")});
 
                 colilla.jTable2.setModel(modeloColilla);
 
@@ -353,6 +355,7 @@ public class Facturas extends javax.swing.JFrame {
                     .addComponent(rbMayorDiezMillones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(rbHastaDiezMillones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(rbMayorCero1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+<<<<<<< HEAD
                     .addComponent(rbHastaUnMillon, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -360,6 +363,9 @@ public class Facturas extends javax.swing.JFrame {
                             .addComponent(lblTotalCaracter, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtTotalCaracter, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
+=======
+                    .addComponent(rbHastaUnMillon, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+>>>>>>> Develop
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -379,6 +385,7 @@ public class Facturas extends javax.swing.JFrame {
                 .addComponent(rbHastaDiezMillones, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rbMayorDiezMillones)
+<<<<<<< HEAD
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 330, Short.MAX_VALUE)
                 .addComponent(lblTotalPor)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -386,6 +393,9 @@ public class Facturas extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(txtTotalCaracter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33))
+=======
+                .addContainerGap(425, Short.MAX_VALUE))
+>>>>>>> Develop
         );
 
         jPanel14.setBackground(new java.awt.Color(255, 255, 255));
@@ -446,7 +456,19 @@ public class Facturas extends javax.swing.JFrame {
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
+<<<<<<< HEAD
         ));
+=======
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+>>>>>>> Develop
         jScrollPane1.setViewportView(jtFactura);
 
         javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);

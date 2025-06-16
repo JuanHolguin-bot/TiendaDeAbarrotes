@@ -13,6 +13,9 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
+import javax.swing.JPopupMenu;
+import javax.swing.JMenuItem;
+import java.awt.event.ActionEvent;
 
 /**
  * public class RegistrarProducto extends javax.swing.JFrame { }
@@ -29,6 +32,7 @@ public class ListaProductos extends javax.swing.JFrame {
     private IStockManager stockManager;
 
     private TableRowSorter<javax.swing.table.DefaultTableModel> rowSorter;
+    private JPopupMenu popupMenu;
 
     public ListaProductos() {
     }
@@ -40,6 +44,7 @@ public class ListaProductos extends javax.swing.JFrame {
         initComponents();
         configurarTabla();
         cargarProductosEnTabla();
+        configurarPopupMenu(); // Añadir esta línea
 
         // Suponiendo que tu modelo es DefaultTableModel
         rowSorter = new TableRowSorter<>((javax.swing.table.DefaultTableModel) jtProductos.getModel());
@@ -96,6 +101,50 @@ public class ListaProductos extends javax.swing.JFrame {
                 producto.getProveedor(),
                 producto.getFechaVencimiento()
             });
+        }
+    }
+
+    private void configurarPopupMenu() {
+        popupMenu = new JPopupMenu();
+        JMenuItem menuEditar = new JMenuItem("Editar producto");
+
+        menuEditar.addActionListener((ActionEvent e) -> {
+            int fila = jtProductos.getSelectedRow();
+            if (fila >= 0) {
+                int idProducto = (int) jtProductos.getValueAt(fila, 0);
+                Producto producto = productoManager.obtenerProducto(idProducto);
+                if (producto != null) {
+                    abrirEdicionProducto(producto);
+                }
+            }
+        });
+
+        popupMenu.add(menuEditar);
+
+        jtProductos.setComponentPopupMenu(popupMenu);
+    }
+
+    private void abrirEdicionProducto(Producto producto) {
+        if (registrarProductoInstance == null || !registrarProductoInstance.isVisible()) {
+            Inventario inventario = new Inventario(productoManager, stockManager);
+            registrarProductoInstance = new RegistrarProducto(this, inventario);
+
+            // Establecer los valores en los campos
+            registrarProductoInstance.txtIdProducto.setText(String.valueOf(producto.getIdProducto()));
+            registrarProductoInstance.txtIdProducto.setEditable(false); // El ID no debería cambiar
+            registrarProductoInstance.txtNombre.setText(producto.getNombre());
+            registrarProductoInstance.cboTipo.setSelectedItem(producto.getTipoProducto());
+            registrarProductoInstance.txtPrecio.setText(String.valueOf(producto.getPrecio()));
+            registrarProductoInstance.txtProveedor.setText(producto.getProveedor());
+            registrarProductoInstance.txtCodigo3.setText(producto.getFechaVencimiento());
+            registrarProductoInstance.txtCantidad.setText(String.valueOf(stockManager.obtenerStock(producto.getIdProducto())));
+
+            registrarProductoInstance.setTitle("Editar Producto");
+            registrarProductoInstance.btnRegistrar.setText("Actualizar");
+
+            registrarProductoInstance.setVisible(true);
+        } else {
+            registrarProductoInstance.toFront();
         }
     }
 
