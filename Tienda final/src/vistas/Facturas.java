@@ -205,11 +205,11 @@ public class Facturas extends javax.swing.JFrame {
                 for (Document producto : productos) {
                     modeloColilla.addRow(new Object[]{
                         producto.getInteger("idProducto"),
-                        producto.getString("producto"),
+                        producto.getString("nombre"),
                         producto.getDouble("precio"),
                         producto.getInteger("cantidad"),
                         producto.getDouble("descuento"),
-                        producto.getDouble("total")
+                        producto.getDouble("totalVenta")
                     });
                 }
 
