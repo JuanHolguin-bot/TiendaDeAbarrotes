@@ -4,7 +4,7 @@
  */
 package reportes;
 
-import gestioninventario.Venta;
+import Entities.Venta;
 import java.util.List;
 
 public class ReporteVentas extends Reportes {
