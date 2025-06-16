@@ -59,6 +59,12 @@ public class GestorStock implements IStockManager {
 
     @Override
     public Map<Integer, Integer> productosStockBajo(int umbral) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Map<Integer, Integer> productosBajoStock = new HashMap<>();
+        for (Map.Entry<Integer, Integer> entry : stockProductos.entrySet()) {
+            if (entry.getValue() <= umbral) {
+                productosBajoStock.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return productosBajoStock;
     }
 }
