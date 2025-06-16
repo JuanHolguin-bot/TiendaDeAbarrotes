@@ -1,5 +1,7 @@
 package Entities;
 
+import java.time.LocalDate;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -12,7 +14,7 @@ public abstract class Producto {
     private int idProducto;
     private String tipoProducto;
     private String proveedor;
-    private String fechaVencimiento;
+    private LocalDate fechaVencimiento;
     private double precio;
 
 
@@ -29,7 +31,7 @@ public abstract class Producto {
     public Producto() {
     }
 
-    public Producto(String nombre, int idProducto,String tipoProducto, String proveedor, String fechaVencimiento, double precio) {
+    public Producto(String nombre, int idProducto,String tipoProducto, String proveedor, LocalDate fechaVencimiento, double precio) {
         this.nombre = nombre;
         this.idProducto = idProducto;
         this.tipoProducto = tipoProducto;
@@ -55,11 +57,11 @@ public abstract class Producto {
         this.proveedor = proveedor;
     }
 
-    public String getFechaVencimiento() {
+    public LocalDate getFechaVencimiento() {
         return fechaVencimiento;
     }
 
-    public void setFechaVencimiento(String fechaVencimiento) {
+    public void setFechaVencimiento(LocalDate fechaVencimiento) {
         this.fechaVencimiento = fechaVencimiento;
     }
 

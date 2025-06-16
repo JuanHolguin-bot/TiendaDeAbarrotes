@@ -4,6 +4,8 @@
  */
 package Entities;
 
+import java.time.LocalDate;
+
 /**
  *
  * @author Juan Holguin
@@ -15,8 +17,8 @@ public class ProductoBebidas extends Producto{
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    public ProductoBebidas(String nombre, int idProducto, String tipoProducto,String proveedor, String fechaVencimiento, double precio) {
-        super(nombre, idProducto,tipoProducto, proveedor, fechaVencimiento, precio);
+    public ProductoBebidas(String nombre, int idProducto, String tipoProducto, String proveedor, LocalDate fechaVencimiento, double precio) {
+        super(nombre, idProducto, tipoProducto, proveedor, fechaVencimiento, precio);
     }
     
 }

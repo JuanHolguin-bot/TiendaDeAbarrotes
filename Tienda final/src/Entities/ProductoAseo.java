@@ -1,5 +1,6 @@
 package Entities;
 
+import java.time.LocalDate;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -18,7 +19,7 @@ public class ProductoAseo extends Producto {
     public ProductoAseo() {
     }
 
-    public ProductoAseo( String nombre, int idProducto, String tipoProducto, String proveedor, String fechaVencimiento, double precio) {
+    public ProductoAseo( String nombre, int idProducto, String tipoProducto, String proveedor, LocalDate fechaVencimiento, double precio) {
         super(nombre, idProducto,tipoProducto, proveedor, fechaVencimiento, precio);
  
     }

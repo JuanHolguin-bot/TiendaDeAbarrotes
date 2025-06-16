@@ -12,6 +12,8 @@ import Entities.Producto;
 import Entities.ProductoAseo;
 import Entities.ProductoBebidas;
 import Entities.ProductoEnlatados;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,13 +36,13 @@ public class GestorProductosRepositorio {
 
     public void guardarProducto(Producto producto) {
         Document filtro = new Document("_id", producto.getIdProducto());
+        String fechaVencStr = producto.getFechaVencimiento() != null ? producto.getFechaVencimiento().toString() : null;
         Document doc = new Document("_id", producto.getIdProducto())
                 .append("nombre", producto.getNombre())
                 .append("tipo producto", producto.getTipoProducto())
                 .append("proveedor", producto.getProveedor())
-                .append("fecha vencimiento", producto.getFechaVencimiento())
+                .append("fecha vencimiento", fechaVencStr)
                 .append("precio", producto.getPrecio());
-        // Agrega aquí los demás campos de Producto que necesites
         prductosCollection.replaceOne(filtro, doc, new com.mongodb.client.model.ReplaceOptions().upsert(true));
     }
 
@@ -56,20 +58,30 @@ public class GestorProductosRepositorio {
                 Double precioObj = doc.getDouble("precio");
                 double precio = precioObj != null ? precioObj : 0.0;
 
-                // Validar campos obligatorios
                 if (nombre == null || tipoProducto == null || proveedor == null || fechaVencimiento == null) {
-                    // Puedes registrar un log aquí si quieres saber qué documento está incompleto
-                    continue; // Salta este documento
+                    continue;
                 }
 
                 Producto producto = null;
+                LocalDate fechaVenc = null;
+                try {
+                    // Intentar formato ISO primero
+                    fechaVenc = LocalDate.parse(fechaVencimiento, DateTimeFormatter.ISO_LOCAL_DATE);
+                } catch (Exception e1) {
+                    try {
+                        // Intentar formato alternativo dd/MM/yyyy
+                        fechaVenc = LocalDate.parse(fechaVencimiento, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    } catch (Exception e2) {
+                        continue; // Si falla, ignora el producto
+                    }
+                }
                 switch (tipoProducto) {
                     case "Enlatados" ->
-                        producto = new ProductoEnlatados(nombre, id, tipoProducto, proveedor, fechaVencimiento, precio);
+                        producto = new ProductoEnlatados(nombre, id, tipoProducto, proveedor, fechaVenc, precio);
                     case "Bebidas" ->
-                        producto = new ProductoBebidas(nombre, id, tipoProducto, proveedor, fechaVencimiento, precio);
+                        producto = new ProductoBebidas(nombre, id, tipoProducto, proveedor, fechaVenc, precio);
                     case "Aseo" ->
-                        producto = new ProductoAseo(nombre, id, tipoProducto, proveedor, fechaVencimiento, precio);
+                        producto = new ProductoAseo(nombre, id, tipoProducto, proveedor, fechaVenc, precio);
                 }
 
                 if (producto != null) {

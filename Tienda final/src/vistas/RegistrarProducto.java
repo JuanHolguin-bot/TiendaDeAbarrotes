@@ -12,6 +12,8 @@ import Entities.ProductoAseo;
 import Entities.ProductoBebidas;
 import Entities.ProductoEnlatados;
 import gestioninventario.Service.Inventario;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -399,13 +401,20 @@ public class RegistrarProducto extends javax.swing.JFrame {
 
             // Si todas las validaciones pasan, crear el producto
             Producto producto = null;
+            LocalDate fechaVenc = null;
+            try {
+                fechaVenc = LocalDate.parse(fechaVencimiento, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            } catch (Exception e) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Formato de fecha inválido. Usa yyyy-MM-dd", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             switch (tipoProducto) {
                 case "Enlatados" ->
-                    producto = new ProductoEnlatados(nombre, idProducto, tipoProducto, proveedor, fechaVencimiento, precio);
+                    producto = new ProductoEnlatados(nombre, idProducto, tipoProducto, proveedor, fechaVenc, precio);
                 case "Bebidas" ->
-                    producto = new ProductoBebidas(nombre, idProducto, tipoProducto, proveedor, fechaVencimiento, precio);
+                    producto = new ProductoBebidas(nombre, idProducto, tipoProducto, proveedor, fechaVenc, precio);
                 case "Aseo" ->
-                    producto = new ProductoAseo(nombre, idProducto, tipoProducto, proveedor, fechaVencimiento, precio);
+                    producto = new ProductoAseo(nombre, idProducto, tipoProducto, proveedor, fechaVenc, precio);
             }
 
             if (producto != null) {
