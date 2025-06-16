@@ -474,7 +474,7 @@ public class Ventas extends javax.swing.JFrame {
                 javax.swing.JOptionPane.showMessageDialog(this, "Debe agregar al menos un producto a la venta.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+
             venta.setVendedor(txtUsuario.getText());
             venta.setCliente(nombreCliente);
             venta.setMonto(gestorVenta.calcularMontoTotal(venta));
@@ -486,12 +486,14 @@ public class Ventas extends javax.swing.JFrame {
 
             javax.swing.JOptionPane.showMessageDialog(this, "Venta generada exitosamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
 
-            // --- ABRIR LA VISTA COLILLAVENTA ---
-            vistas.ColillaVenta colilla = new vistas.ColillaVenta();
+            double totalVenta = gestorVenta.calcularMontoTotal(venta);
+            vistas.ColillaVenta colilla = new vistas.ColillaVenta(
+                    txtUsuario.getText(),
+                    txtCliente.getText(),
+                    jTable1.getModel(),
+                    totalVenta
+            );
 
-            colilla.TxtCliente.setText(txtCliente.getText());
-            colilla.TxtCajero.setText(txtUsuario.getText());
-            colilla.jTable2.setModel(jTable1.getModel());
             javax.swing.JFrame frame = new javax.swing.JFrame("Colilla de Venta");
             frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
             frame.getContentPane().add(colilla);
@@ -518,17 +520,16 @@ public class Ventas extends javax.swing.JFrame {
         String numeroFactura = gestorFactura.generarSiguienteNumeroFactura();
 
         // obtener info desde la clase Venta
-        Map<Producto, Integer>  productosVenta_ = venta.getProductos();
+        Map<Producto, Integer> productosVenta_ = venta.getProductos();
         double descuento = venta.getDescuento();
-        List<Document> productosVenta = gestorFactura.productosToDocumentos(productosVenta_,descuento);
-        
-        
-        String cliente =  venta.getCliente();
+        List<Document> productosVenta = gestorFactura.productosToDocumentos(productosVenta_, descuento);
+
+        String cliente = venta.getCliente();
         double precioVenta = venta.getMonto();
         String vendedor = venta.getVendedor();
-        
+
         // Guardar la factura en MongoDB
-        gestorFactura.guardarFactura(numeroFactura, txtCliente.getText(), productosVenta, precioVenta, vendedor );
+        gestorFactura.guardarFactura(numeroFactura, txtCliente.getText(), productosVenta, precioVenta, vendedor);
     }//GEN-LAST:event_btnGenerarVentaActionPerformed
 
     private void txtPrecioVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioVentaActionPerformed

@@ -16,9 +16,9 @@ import java.util.List;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.ButtonGroup;
+import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.JFrame;
 
 /**
  *
@@ -209,9 +209,11 @@ public class Facturas extends javax.swing.JFrame {
                         producto.getDouble("precio"),
                         producto.getInteger("cantidad"),
                         producto.getDouble("descuento"),
-                        producto.getDouble("totalVenta")
+                        producto.getDouble("total")
                     });
                 }
+                // Agrega una fila vacía o separadora si quieres
+                modeloColilla.addRow(new Object[]{"", "", "", "", "TOTAL VENTA:", factura.getDouble("totalVenta")});
 
                 colilla.jTable2.setModel(modeloColilla);
 
