@@ -123,19 +123,32 @@ public class Facturas extends javax.swing.JFrame {
         String texto = txtFiltro1.getText();
         String columnaSeleccionada = (String) cboFiltro1.getSelectedItem();
 
+        // Mostrar el filtro seleccionado en el label
+        lblTotalCaracter.setText(columnaSeleccionada);
+
+        // Calcular la suma de la columna "Total Venta" de las filas visibles
+        double suma = 0.0;
+        for (int i = 0; i < jtFactura.getRowCount(); i++) {
+            Object valor = jtFactura.getValueAt(i, 2); // Columna 2: Total Venta
+            if (valor != null) {
+                try {
+                    suma += Double.parseDouble(valor.toString());
+                } catch (NumberFormatException e) {
+                    // Ignorar valores no numéricos
+                }
+            }
+        }
+        txtTotalCaracter.setText(String.format("%.2f", suma));
+
         List<RowFilter<DefaultTableModel, Object>> filters = new ArrayList<>();
 
         // Filtro por texto
         if (!texto.trim().isEmpty()) {
             int columnaIndice = switch (columnaSeleccionada) {
-                case "Numero Factura" ->
-                    0;
-                case "Cliente" ->
-                    1;
-                case "Vendedor" ->
-                    4;
-                default ->
-                    0;
+                case "Numero Factura" -> 0;
+                case "Cliente" -> 1;
+                case "Vendedor" -> 4;
+                default -> 0;
             };
             filters.add(RowFilter.regexFilter("(?i)" + texto, columnaIndice));
         }
@@ -259,6 +272,10 @@ public class Facturas extends javax.swing.JFrame {
         rbHastaDiezMillones = new javax.swing.JRadioButton();
         rbMayorCero1 = new javax.swing.JRadioButton();
         rbHastaUnMillon = new javax.swing.JRadioButton();
+        jPanel1 = new javax.swing.JPanel();
+        lblTotalPor = new javax.swing.JLabel();
+        lblTotalCaracter = new javax.swing.JLabel();
+        txtTotalCaracter = new javax.swing.JTextField();
         jPanel14 = new javax.swing.JPanel();
         jPanel15 = new javax.swing.JPanel();
         btnQuitarFiltros5 = new javax.swing.JButton();
@@ -316,20 +333,47 @@ public class Facturas extends javax.swing.JFrame {
             }
         });
 
+        lblTotalPor.setText("Total por:");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTotalPor, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTotalCaracter, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTotalCaracter, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblTotalPor)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblTotalCaracter)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtTotalCaracter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(78, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtFiltro1)
-                    .addComponent(cboFiltro1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rbMayorDiezMillones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rbHastaDiezMillones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rbMayorCero1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rbHastaUnMillon, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtFiltro1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cboFiltro1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rbMayorDiezMillones, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rbHastaDiezMillones, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rbMayorCero1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rbHastaUnMillon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -349,7 +393,9 @@ public class Facturas extends javax.swing.JFrame {
                 .addComponent(rbHastaDiezMillones, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rbMayorDiezMillones)
-                .addContainerGap(425, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 276, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15))
         );
 
         jPanel14.setBackground(new java.awt.Color(255, 255, 255));
@@ -505,7 +551,7 @@ public class Facturas extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSalir5ActionPerformed
 
     private void cboFiltro1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboFiltro1ActionPerformed
-        // TODO add your handling code here:
+        filtrarTabla();
     }//GEN-LAST:event_cboFiltro1ActionPerformed
 
     private void rbMayorCero1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbMayorCero1ActionPerformed
@@ -562,15 +608,19 @@ public class Facturas extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cboFiltro1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jtFactura;
+    private javax.swing.JLabel lblTotalCaracter;
+    private javax.swing.JLabel lblTotalPor;
     private javax.swing.JRadioButton rbHastaDiezMillones;
     private javax.swing.JRadioButton rbHastaUnMillon;
     private javax.swing.JRadioButton rbMayorCero1;
     private javax.swing.JRadioButton rbMayorDiezMillones;
     private javax.swing.JTextField txtFiltro1;
+    private javax.swing.JTextField txtTotalCaracter;
     // End of variables declaration//GEN-END:variables
 }
