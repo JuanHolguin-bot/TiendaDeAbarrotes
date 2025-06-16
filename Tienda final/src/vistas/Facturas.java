@@ -209,7 +209,7 @@ public class Facturas extends javax.swing.JFrame {
                         producto.getDouble("precio"),
                         producto.getInteger("cantidad"),
                         producto.getDouble("descuento"),
-                        producto.getDouble("total")
+                        producto.getDouble("Total producto")
                     });
                 }
                 // Agrega una fila vacía o separadora si quieres
