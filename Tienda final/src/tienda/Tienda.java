@@ -4,9 +4,6 @@
  */
 package tienda;
 
-import java.io.IOException;
-import vistas.Login;
-
 
 
 /**
@@ -14,18 +11,14 @@ import vistas.Login;
  * @author jose_
  */
 public class Tienda {
-    private static Login loginInstance = null;
     /**
-     *
+     * 
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException {
-
-        if (loginInstance == null) {
-            loginInstance = new Login();
-            loginInstance.setVisible(true);
-        }
-
+    public static void main(String[] args) {
+        vistas.VistaLogin ventana = new vistas.VistaLogin();
+        ventana.setVisible(true);
+        
     }
     
 }

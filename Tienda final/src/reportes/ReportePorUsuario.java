@@ -4,8 +4,12 @@
  */
 package reportes;
 
+import gestioninventario.Venta;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-/*
+
 public class ReportePorUsuario extends Reportes {
 
     public ReportePorUsuario(String titulo, List<Venta> ventas) {
@@ -29,4 +33,4 @@ public class ReportePorUsuario extends Reportes {
             System.out.println("Vendedor: " + entry.getKey() + " - Total Ventas: $" + entry.getValue());
         }
     }
-}*/
+}

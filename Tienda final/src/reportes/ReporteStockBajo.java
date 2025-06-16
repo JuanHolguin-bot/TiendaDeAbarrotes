@@ -4,13 +4,18 @@
  */
 package reportes;
 
-/*
+import gestioninventario.Venta;
+import gestioninventario.Producto;
+import gestioninventario.Inventario;
+import java.util.List;
+
+
   public class ReporteStockBajo extends Reportes {
 
         public ReporteStockBajo(String titulo, List<Venta> ventas) {
             super(titulo, ventas);
         }
-        
+
         @Override
         public void generarReporte() {
             imprimirEncabezado();
@@ -25,4 +30,4 @@ package reportes;
                 }
             }
         }
-    }*/
+    }

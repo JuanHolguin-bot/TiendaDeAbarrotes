@@ -4,7 +4,7 @@
  */
 package reportes;
 
-import Entities.Venta;
+import gestioninventario.Venta;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
