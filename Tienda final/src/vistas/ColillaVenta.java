@@ -111,6 +111,8 @@ public class ColillaVenta extends javax.swing.JPanel {
 
         lblFechaDeGeneracion.setText("Fecha de generacion:");
 
+        txtFechaDeGeneracion.setEditable(false);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
