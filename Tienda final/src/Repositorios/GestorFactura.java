@@ -4,6 +4,7 @@ import Entities.Producto;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import gestioninventario.Service.GestorVenta;
 import org.bson.Document;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +14,13 @@ public class GestorFactura {
 
     private MongoDatabase dataBase;
     private MongoCollection<Document> ventasCollection;
+    private GestorVenta gestorVenta;
 
     public GestorFactura() {
         var cliente = MongoClients.create("mongodb+srv://juanholguin3:1035974679@cluster0.lmisdxx.mongodb.net/");
         dataBase = cliente.getDatabase("TiendaDeAbarrotes");
         ventasCollection = dataBase.getCollection("Ventas");
+        gestorVenta = new GestorVenta(); // <-- Añade esta línea
     }
 
     // Genera el siguiente número de factura (F1, F2, ...)
@@ -64,7 +67,6 @@ public class GestorFactura {
         return facturasEnBd;
     }
 
-
     public Document obtenerFacturaPorNumero(String numeroFactura) {
         return ventasCollection.find(new Document("numeroFactura", numeroFactura)).first();
     }
@@ -74,6 +76,7 @@ public class GestorFactura {
         for (Map.Entry<Producto, Integer> entry : productos.entrySet()) {
             Producto producto = entry.getKey();
             int cantidad = entry.getValue();
+            double totalProducto = gestorVenta.calcularTotalPorProducto(producto.getPrecio(), cantidad, descuentoGeneral);
             Document doc = new Document("idProducto", producto.getIdProducto())
                     .append("nombre", producto.getNombre())
                     .append("tipo producto", producto.getTipoProducto())
@@ -81,7 +84,8 @@ public class GestorFactura {
                     .append("fecha vencimiento", producto.getFechaVencimiento())
                     .append("precio", producto.getPrecio())
                     .append("cantidad", cantidad)
-                    .append("descuento", descuentoGeneral);
+                    .append("descuento", descuentoGeneral)
+                    .append("Total producto", totalProducto);
             documentos.add(doc);
         }
         return documentos;

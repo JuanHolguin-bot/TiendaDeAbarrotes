@@ -4,10 +4,14 @@ import Entities.Producto;
 import Entities.Venta;
 
 public class GestorVenta {
-    private final IStockManager stockManager;
+    private  IStockManager stockManager;
 
+
+    
     public GestorVenta(IStockManager stockManager) {
         this.stockManager = stockManager;
+    }
+        public GestorVenta() {
     }
 
     public void agregarProductoAVenta(Venta venta, Producto producto, int cantidad, double descuento) {

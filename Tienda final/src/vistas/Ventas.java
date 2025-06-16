@@ -113,6 +113,7 @@ public class Ventas extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+<<<<<<< HEAD
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
@@ -125,6 +126,18 @@ public class Ventas extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+=======
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                .addContainerGap())
+>>>>>>> Develop
         );
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -276,7 +289,19 @@ public class Ventas extends javax.swing.JFrame {
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
+<<<<<<< HEAD
         ));
+=======
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+>>>>>>> Develop
         jScrollPane1.setViewportView(jTable1);
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
@@ -483,7 +508,7 @@ public class Ventas extends javax.swing.JFrame {
                 javax.swing.JOptionPane.showMessageDialog(this, "Debe agregar al menos un producto a la venta.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+
             venta.setVendedor(txtUsuario.getText());
             venta.setCliente(nombreCliente);
             venta.setMonto(gestorVenta.calcularMontoTotal(venta));
@@ -495,12 +520,14 @@ public class Ventas extends javax.swing.JFrame {
 
             javax.swing.JOptionPane.showMessageDialog(this, "Venta generada exitosamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
 
-            // --- ABRIR LA VISTA COLILLAVENTA ---
-            vistas.ColillaVenta colilla = new vistas.ColillaVenta();
+            double totalVenta = gestorVenta.calcularMontoTotal(venta);
+            vistas.ColillaVenta colilla = new vistas.ColillaVenta(
+                    txtUsuario.getText(),
+                    txtCliente.getText(),
+                    jTable1.getModel(),
+                    totalVenta
+            );
 
-            colilla.TxtCliente.setText(txtCliente.getText());
-            colilla.TxtCajero.setText(txtUsuario.getText());
-            colilla.jTable2.setModel(jTable1.getModel());
             javax.swing.JFrame frame = new javax.swing.JFrame("Colilla de Venta");
             frame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
             frame.getContentPane().add(colilla);
@@ -527,17 +554,16 @@ public class Ventas extends javax.swing.JFrame {
         String numeroFactura = gestorFactura.generarSiguienteNumeroFactura();
 
         // obtener info desde la clase Venta
-        Map<Producto, Integer>  productosVenta_ = venta.getProductos();
+        Map<Producto, Integer> productosVenta_ = venta.getProductos();
         double descuento = venta.getDescuento();
-        List<Document> productosVenta = gestorFactura.productosToDocumentos(productosVenta_,descuento);
-        
-        
-        String cliente =  venta.getCliente();
+        List<Document> productosVenta = gestorFactura.productosToDocumentos(productosVenta_, descuento);
+
+        String cliente = venta.getCliente();
         double precioVenta = venta.getMonto();
         String vendedor = venta.getVendedor();
-        
+
         // Guardar la factura en MongoDB
-        gestorFactura.guardarFactura(numeroFactura, txtCliente.getText(), productosVenta, precioVenta, vendedor );
+        gestorFactura.guardarFactura(numeroFactura, txtCliente.getText(), productosVenta, precioVenta, vendedor);
     }//GEN-LAST:event_btnGenerarVentaActionPerformed
 
     private void txtPrecioVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioVentaActionPerformed
