@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Tienda final">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Tienda final/gson-2.13.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Tienda final/mongodb-driver-core-5.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Tienda final/mongodb-driver-sync-5.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Tienda final/bson-5.5.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
