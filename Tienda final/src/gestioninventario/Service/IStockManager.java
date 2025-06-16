@@ -17,6 +17,6 @@ public interface IStockManager {   //define las operaciones relacionadas con el 
     int obtenerStock(int idProducto);
     void actualizarStock(int idProdcuto, int cantidad);
     Map<Integer,Integer> cargarStockDesdeRepositorio();
-    Map<Producto, Integer> productosStockBajo(int umbral);
+    Map<Integer, Integer> productosStockBajo(int umbral);
     
 }

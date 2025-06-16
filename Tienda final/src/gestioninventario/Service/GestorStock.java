@@ -58,7 +58,7 @@ public class GestorStock implements IStockManager {
     }
 
     @Override
-    public Map<Producto, Integer> productosStockBajo(int umbral) {
+    public Map<Integer, Integer> productosStockBajo(int umbral) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
