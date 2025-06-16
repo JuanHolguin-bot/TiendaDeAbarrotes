@@ -29,7 +29,7 @@ public class GestorVenta {
         for (var entry : venta.getProductos().entrySet()) {
             Producto producto = entry.getKey();
             int cantidad = entry.getValue();
-            double descuento = venta.getDescuento(producto);
+            double descuento = venta.getDescuento();
             montoTotal += calcularTotalPorProducto(producto.getPrecio(), cantidad, descuento);
         }
         return montoTotal;
