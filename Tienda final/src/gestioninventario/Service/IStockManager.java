@@ -17,6 +17,10 @@ public interface IStockManager {   //define las operaciones relacionadas con el 
     int obtenerStock(int idProducto);
     void actualizarStock(int idProdcuto, int cantidad);
     Map<Integer,Integer> cargarStockDesdeRepositorio();
+<<<<<<< HEAD
     Map<Producto, Integer> productosStockBajo(int umbral);
+=======
+    Map<Integer, Integer> productosStockBajo(int umbral);
+>>>>>>> parent of 31125de (Merge branch 'main' into Develop)
     
 }

@@ -16,10 +16,18 @@ import java.util.Map;
 public class GestorProductos implements IProductoManager {
 
     // attributes
+<<<<<<< HEAD
     private static  Map<Integer, Producto> productos = new HashMap<>(); // idProducto , producto
     private final GestorProductosRepositorio productoRepositorio = new GestorProductosRepositorio();
 
     // Methods
+=======
+    private static Map<Integer, Producto> productos = new HashMap<>(); // idProducto , producto
+    private final GestorProductosRepositorio productoRepositorio = new GestorProductosRepositorio();
+
+    // Methods
+    
+>>>>>>> parent of 31125de (Merge branch 'main' into Develop)
     @Override
     public void registrarProducto(Producto producto) {
         productos.put(producto.getIdProducto(), producto);
@@ -30,13 +38,17 @@ public class GestorProductos implements IProductoManager {
     public Producto obtenerProducto(int idProducto) {
         return productos.get(idProducto);
     }
+<<<<<<< HEAD
     
+=======
+>>>>>>> parent of 31125de (Merge branch 'main' into Develop)
 
     @Override
     public Map<Integer, Producto> obtenerTodosLosProductos() {
         try {
             productos = productoRepositorio.cargarProductodDesdeBd();
         } catch (Exception e) {
+<<<<<<< HEAD
             // Maneja el error, por ejemplo:
             System.out.println("Error al cargar productos: " + e.getMessage());
             productos = new HashMap<>(); // O deja el mapa vacío
@@ -45,4 +57,13 @@ public class GestorProductos implements IProductoManager {
         return productos;
     }
     
+=======
+            System.out.println("Error al cargar productos: " + e.getMessage());
+            productos = new HashMap<>();
+        }
+
+        return productos;
+    }
+
+>>>>>>> parent of 31125de (Merge branch 'main' into Develop)
 }
