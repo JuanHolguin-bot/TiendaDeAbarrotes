@@ -58,7 +58,10 @@
                       <Component id="jScrollPane1" alignment="1" pref="730" max="32767" attributes="0"/>
                       <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of b423e5c (Merge pull request #33 from JuanHolguin-bot/Feature/ReporteBajoStock)
                       <Component id="jScrollPane1" alignment="1" max="32767" attributes="0"/>
                       <Component id="jPanel4" alignment="0" max="32767" attributes="0"/>
 >>>>>>> parent of b423e5c (Merge pull request #33 from JuanHolguin-bot/Feature/ReporteBajoStock)
@@ -174,8 +177,11 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnVenta" min="-2" pref="139" max="-2" attributes="0"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
                       <EmptySpace max="32767" attributes="0"/>
 =======
+=======
+>>>>>>> parent of b423e5c (Merge pull request #33 from JuanHolguin-bot/Feature/ReporteBajoStock)
                       <EmptySpace pref="382" max="32767" attributes="0"/>
                       <Component id="btnFacturas" min="-2" pref="85" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -192,8 +198,14 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="btnVenta" pref="40" max="32767" attributes="0"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
                           <Component id="btnSalir" max="32767" attributes="0"/>
                           <Component id="btnNuevo" alignment="0" max="32767" attributes="0"/>
+=======
+                          <Component id="btnNuevo" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnFacturas" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnSalir" alignment="0" max="32767" attributes="0"/>
+>>>>>>> parent of b423e5c (Merge pull request #33 from JuanHolguin-bot/Feature/ReporteBajoStock)
 =======
                           <Component id="btnNuevo" alignment="0" max="32767" attributes="0"/>
                           <Component id="btnFacturas" alignment="0" max="32767" attributes="0"/>
