@@ -20,7 +20,7 @@ public class GestorProductos implements IProductoManager {
     private final GestorProductosRepositorio productoRepositorio = new GestorProductosRepositorio();
 
     // Methods
-
+    
     @Override
     public void registrarProducto(Producto producto) {
         productos.put(producto.getIdProducto(), producto);
@@ -37,9 +37,8 @@ public class GestorProductos implements IProductoManager {
         try {
             productos = productoRepositorio.cargarProductodDesdeBd();
         } catch (Exception e) {
-            // Maneja el error, por ejemplo:
             System.out.println("Error al cargar productos: " + e.getMessage());
-            productos = new HashMap<>(); // O deja el mapa vacío
+            productos = new HashMap<>();
         }
 
         return productos;
