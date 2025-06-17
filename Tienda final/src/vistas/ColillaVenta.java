@@ -18,12 +18,29 @@ public class ColillaVenta extends javax.swing.JPanel {
     public ColillaVenta() {
         initComponents();
     }
-    
-    public ColillaVenta(String cajero, String cliente, javax.swing.table.TableModel modeloProductos) {
+
+    public ColillaVenta(String cajero, String cliente, javax.swing.table.TableModel modeloProductos, double totalVenta) {
         initComponents();
         TxtCajero.setText(cajero);
         TxtCliente.setText(cliente);
-        jTable2.setModel(modeloProductos);
+
+        // Copiar el modelo recibido a un DefaultTableModel para poder añadir filas
+        javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel();
+        for (int i = 0; i < modeloProductos.getColumnCount(); i++) {
+            model.addColumn(modeloProductos.getColumnName(i));
+        }
+        for (int i = 0; i < modeloProductos.getRowCount(); i++) {
+            Object[] fila = new Object[modeloProductos.getColumnCount()];
+            for (int j = 0; j < modeloProductos.getColumnCount(); j++) {
+                fila[j] = modeloProductos.getValueAt(i, j);
+            }
+            model.addRow(fila);
+        }
+
+        // Añadir la fila del total de la venta
+        model.addRow(new Object[]{"", "", "", "", "TOTAL VENTA:", totalVenta});
+
+        jTable2.setModel(model);
     }
 
     /**
@@ -144,7 +161,15 @@ public class ColillaVenta extends javax.swing.JPanel {
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane2.setViewportView(jTable2);
 
         javax.swing.GroupLayout jpImprimirLayout = new javax.swing.GroupLayout(jpImprimir);

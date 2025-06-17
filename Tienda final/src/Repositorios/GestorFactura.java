@@ -1,21 +1,26 @@
 package Repositorios;
 
+import Entities.Producto;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import gestioninventario.Service.GestorVenta;
 import org.bson.Document;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class GestorFactura {
 
     private MongoDatabase dataBase;
     private MongoCollection<Document> ventasCollection;
+    private GestorVenta gestorVenta;
 
     public GestorFactura() {
         var cliente = MongoClients.create("mongodb+srv://juanholguin3:1035974679@cluster0.lmisdxx.mongodb.net/");
         dataBase = cliente.getDatabase("TiendaDeAbarrotes");
         ventasCollection = dataBase.getCollection("Ventas");
+        gestorVenta = new GestorVenta(); // <-- Añade esta línea
     }
 
     // Genera el siguiente número de factura (F1, F2, ...)
@@ -39,12 +44,13 @@ public class GestorFactura {
     }
 
     // Guarda una factura completa (una venta con todos sus productos)
-    public void guardarFactura(String numeroFactura, String cliente, List<Document> productos, double totalVenta) {
+    public void guardarFactura(String numeroFactura, String cliente, List<Document> productos, double totalVenta, String vendedor) {
         Document factura = new Document("numeroFactura", numeroFactura)
                 .append("cliente", cliente)
                 .append("productos", productos)
                 .append("totalVenta", totalVenta)
-                .append("fecha", java.time.LocalDateTime.now().toString());
+                .append("fecha", java.time.LocalDateTime.now().toString())
+                .append("Vendedor", vendedor);
         ventasCollection.insertOne(factura);
     }
 
@@ -59,5 +65,29 @@ public class GestorFactura {
             throw new Exception("No hay facturas registradas aún: " + exe.getMessage());
         }
         return facturasEnBd;
+    }
+
+    public Document obtenerFacturaPorNumero(String numeroFactura) {
+        return ventasCollection.find(new Document("numeroFactura", numeroFactura)).first();
+    }
+
+    public List<Document> productosToDocumentos(Map<Producto, Integer> productos, double descuentoGeneral) {
+        List<Document> documentos = new ArrayList<>();
+        for (Map.Entry<Producto, Integer> entry : productos.entrySet()) {
+            Producto producto = entry.getKey();
+            int cantidad = entry.getValue();
+            double totalProducto = gestorVenta.calcularTotalPorProducto(producto.getPrecio(), cantidad, descuentoGeneral);
+            Document doc = new Document("idProducto", producto.getIdProducto())
+                    .append("nombre", producto.getNombre())
+                    .append("tipo producto", producto.getTipoProducto())
+                    .append("proveedor", producto.getProveedor())
+                    .append("fecha vencimiento", producto.getFechaVencimiento())
+                    .append("precio", producto.getPrecio())
+                    .append("cantidad", cantidad)
+                    .append("descuento", descuentoGeneral)
+                    .append("Total producto", totalProducto);
+            documentos.add(doc);
+        }
+        return documentos;
     }
 }

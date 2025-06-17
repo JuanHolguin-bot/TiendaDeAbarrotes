@@ -4,10 +4,14 @@ import Entities.Producto;
 import Entities.Venta;
 
 public class GestorVenta {
-    private final IStockManager stockManager;
+    private  IStockManager stockManager;
 
+
+    
     public GestorVenta(IStockManager stockManager) {
         this.stockManager = stockManager;
+    }
+        public GestorVenta() {
     }
 
     public void agregarProductoAVenta(Venta venta, Producto producto, int cantidad, double descuento) {
@@ -29,7 +33,7 @@ public class GestorVenta {
         for (var entry : venta.getProductos().entrySet()) {
             Producto producto = entry.getKey();
             int cantidad = entry.getValue();
-            double descuento = venta.getDescuento(producto);
+            double descuento = venta.getDescuento();
             montoTotal += calcularTotalPorProducto(producto.getPrecio(), cantidad, descuento);
         }
         return montoTotal;

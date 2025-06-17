@@ -13,6 +13,9 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
+import javax.swing.JPopupMenu;
+import javax.swing.JMenuItem;
+import java.awt.event.ActionEvent;
 
 /**
  * public class RegistrarProducto extends javax.swing.JFrame { }
@@ -29,6 +32,7 @@ public class ListaProductos extends javax.swing.JFrame {
     private IStockManager stockManager;
 
     private TableRowSorter<javax.swing.table.DefaultTableModel> rowSorter;
+    private JPopupMenu popupMenu;
 
     public ListaProductos() {
     }
@@ -40,6 +44,7 @@ public class ListaProductos extends javax.swing.JFrame {
         initComponents();
         configurarTabla();
         cargarProductosEnTabla();
+        configurarPopupMenu(); // Añadir esta línea
 
         // Suponiendo que tu modelo es DefaultTableModel
         rowSorter = new TableRowSorter<>((javax.swing.table.DefaultTableModel) jtProductos.getModel());
@@ -99,6 +104,50 @@ public class ListaProductos extends javax.swing.JFrame {
         }
     }
 
+    private void configurarPopupMenu() {
+        popupMenu = new JPopupMenu();
+        JMenuItem menuEditar = new JMenuItem("Editar producto");
+
+        menuEditar.addActionListener((ActionEvent e) -> {
+            int fila = jtProductos.getSelectedRow();
+            if (fila >= 0) {
+                int idProducto = (int) jtProductos.getValueAt(fila, 0);
+                Producto producto = productoManager.obtenerProducto(idProducto);
+                if (producto != null) {
+                    abrirEdicionProducto(producto);
+                }
+            }
+        });
+
+        popupMenu.add(menuEditar);
+
+        jtProductos.setComponentPopupMenu(popupMenu);
+    }
+
+    private void abrirEdicionProducto(Producto producto) {
+        if (registrarProductoInstance == null || !registrarProductoInstance.isVisible()) {
+            Inventario inventario = new Inventario(productoManager, stockManager);
+            registrarProductoInstance = new RegistrarProducto(this, inventario);
+
+            // Establecer los valores en los campos
+            registrarProductoInstance.txtIdProducto.setText(String.valueOf(producto.getIdProducto()));
+            registrarProductoInstance.txtIdProducto.setEditable(false); // El ID no debería cambiar
+            registrarProductoInstance.txtNombre.setText(producto.getNombre());
+            registrarProductoInstance.cboTipo.setSelectedItem(producto.getTipoProducto());
+            registrarProductoInstance.txtPrecio.setText(String.valueOf(producto.getPrecio()));
+            registrarProductoInstance.txtProveedor.setText(producto.getProveedor());
+            registrarProductoInstance.txtCodigo3.setText(producto.getFechaVencimiento());
+            registrarProductoInstance.txtCantidad.setText(String.valueOf(stockManager.obtenerStock(producto.getIdProducto())));
+
+            registrarProductoInstance.setTitle("Editar Producto");
+            registrarProductoInstance.btnRegistrar.setText("Actualizar");
+
+            registrarProductoInstance.setVisible(true);
+        } else {
+            registrarProductoInstance.toFront();
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -117,6 +166,7 @@ public class ListaProductos extends javax.swing.JFrame {
         btnNuevo = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
         btnVenta = new javax.swing.JButton();
+        btnFacturas = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         txtFiltro = new javax.swing.JTextField();
@@ -191,6 +241,14 @@ public class ListaProductos extends javax.swing.JFrame {
             }
         });
 
+        btnFacturas.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnFacturas.setText("Facturas");
+        btnFacturas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFacturasActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -200,7 +258,9 @@ public class ListaProductos extends javax.swing.JFrame {
                                 .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 485, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 382, Short.MAX_VALUE)
+                                .addComponent(btnFacturas, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
                                 .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
@@ -210,8 +270,9 @@ public class ListaProductos extends javax.swing.JFrame {
                                 .addContainerGap()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(btnVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                                        .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btnNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(btnNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnFacturas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap())
         );
 
@@ -321,7 +382,14 @@ public class ListaProductos extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtFiltroActionPerformed
 
+    private void btnFacturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFacturasActionPerformed
+        Facturas ventanaFacturas = new Facturas();
+        ventanaFacturas.setLocationRelativeTo(this); // Centrar respecto a la ventana actual
+        ventanaFacturas.setVisible(true);
+    }//GEN-LAST:event_btnFacturasActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnFacturas;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JButton btnSalir;
     private javax.swing.JButton btnVenta;
